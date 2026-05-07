@@ -1,0 +1,121 @@
+#ifndef _VISION_H_
+#define _VISION_H_
+
+#include "main.h"
+#include "stdint.h"
+#include "stdbool.h"
+#include <stdint.h>
+
+#define    VISION_FRAME_HEADER_TX  	0x5A
+#define    VISION_FRAME_HEADER_RX  	0xA5
+
+#ifndef PI
+#define PI 3.14159265f
+#endif
+
+typedef struct __attribute__((packed))
+{
+	uint8_t game_progress; // 当前比赛状态 0:未开始比赛 1:准备阶段 2:自检阶段 3:五秒倒计时 4:比赛中 5:比赛结算中
+	uint16_t remain_time;  // 比赛剩余时间 单位:s
+	uint16_t current_hp;   // 当前血量
+	uint16_t projectile;    // 哨兵当前剩余允许发弹量
+
+	uint32_t sentry_info; 	//bit0-10：除远程兑换外，哨兵机器人成功兑换的允许发弹量，开局为0，在哨兵机器人成功兑换一定允许发弹量后，该值将变为哨兵机器人成功兑换的允许发弹量值
+							//bit11-14：哨兵机器人成功远程兑换允许发弹量的次数，开局为0，在哨兵机器人成功远程兑换允许发弹量后，该值将变为哨兵机器人成功远程兑换允许发弹量的次数
+							//bit15-18：哨兵机器人成功远程兑换血量的次数，开局为0，在哨兵机器人成功远程兑换血量后，该值将变为哨兵机器人成功远程兑换血量的次数
+							//bit19：哨兵机器人当前是否可以确认免费复活，可以确认免费复活时值为1，否则为0
+							//bit20：哨兵机器人当前是否可以兑换立即复活，可以兑换立即复活时值为1，否则为0
+							//bit21-30：哨兵机器人当前若兑换立即复活需要花费的金币数。
+							//bit31 保留
+	uint16_t sentry_info_2;	// bit0：哨兵当前是否处于脱战状态，处于脱战状态时为1，否则为0
+							// bit1-11：队伍17mm允许发弹量的剩余可兑换数
+							// bit12-13:哨兵当前姿态，1为进攻姿态，2为防御姿态，3为移动姿态
+							// bit14：己方能量机关是否能够进入正在激活状态，1为当前可激活
+							// bit 15：保留位
+
+	uint8_t sentry_info_3;  // bit 0: 装甲板是否被攻击 0:否 1:是
+							// bit 1: RFID 是否检测到堡垒 0:否 1:是
+							// bit 2: RFID 是否检测到补给区(与兑换站不重叠) 0:否 1:是
+							// bit 3: RFID 是否检测到补给区(与兑换站重叠) 0:否 1:是							
+							// bit 4: 当前剩余能量值是否小于30% 0:否 1:是
+							// bit 5：RFID 是否检测到对方前哨站增益点
+							// bit 6：RFID 是否检测到对方堡垒增益点
+	uint16_t ally_outpost_hp;  // 己方前哨站血量
+	uint16_t ally_base_hp;     // 己方基地血量
+}Judge_Data_e;
+//能否能打符  当前姿态  是否能买活 买活花多少钱
+typedef struct __attribute__((packed))
+{
+	uint8_t header;
+	uint8_t detect_color;  // 0-red 1-blue
+	
+	float roll;
+	float pitch;
+	float top_yaw;
+	float diff_yaw;//大小yaw之间相差角度
+  	float diff_pitch;//大小yaw之间pitch差值
+	float bullet_speed;
+	uint8_t robo_status; //敌方机器人死没死
+	
+	Judge_Data_e AI_Judge_data;
+	
+ 	uint8_t end_frame;   
+	//uint16_t checksum;
+}VisionTransmit;
+
+typedef struct __attribute__((packed))
+{
+	uint8_t header;
+	
+	int8_t tracking; //是否正在瞄准
+	
+	float base_yaw;  //自瞄目标角度 单位°
+	float top_yaw;	 //自瞄目标角度 单位°
+	float pitch;
+	
+	float armor_yaw;//单位弧度 （目标角度和目前角度差值，用于火控）
+	float distance;//两车中心距离
+	float armor_radius;	//装甲板的物理半径
+	
+	uint8_t force_shoot;//检测到 强制开一发火 0是不开 1为开火
+	
+/***********以下为ai传输内容***********/
+	float linear_x;
+	float linear_y;	 
+	float angular_z; //旋转速度
+
+	uint8_t spin_mode;  //0为小陀螺关  1为小陀螺开
+	uint8_t sentry_mode; //1为进攻 2为防守 3为移动
+	uint8_t energy_activation; //0为不激活 1为激活小符 2为激活大符 
+	uint8_t survive; //0为不买活 1为买活
+	uint8_t buy_bullet; //0为不买弹 1为买弹	//之后再说
+	uint8_t end_frame;   
+	//uint16_t checksum;
+}VisionReceive;
+
+typedef struct
+{	
+	float base_yaw;
+	float top_yaw;
+	float pitch;
+	uint8_t mode;
+	unsigned char found;
+	float fire;
+	float v_yaw;
+	float distance;//两车中心距离
+	float distance_to_center;//云台中心到锁定装甲板中心距离
+	float yaw_slope;
+	float pitch_slope;
+}Vision_t;
+
+extern VisionReceive vision_receive;
+extern VisionTransmit vision_transmit;
+extern Vision_t vision;
+
+void Vision_DataReceive(uint8_t *read_from_usart, uint32_t length);
+void Vision_DataTransmit(void);
+void Vision_DataUpdate(void);
+void Vision_Init(void);
+void Vision_ParseData(void);
+
+#endif
