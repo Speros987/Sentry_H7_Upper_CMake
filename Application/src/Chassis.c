@@ -38,10 +38,10 @@ void Chassis_Init()
 		chassis.rotate.InitAngle -= 360;
 	chassis.rotate.InitpitchAngle = 1290; 
 
-	chassis.motors[0].TurnOffset= -304.57; //
-	chassis.motors[1].TurnOffset= -44.78;//
-	chassis.motors[2].TurnOffset= -119.49 + 180;//  //此处校准舵电机 正常加减30°的倍数
-	chassis.motors[3].TurnOffset= -6.5;//
+	chassis.motors[0].TurnOffset= -304.57 - 30; //
+	chassis.motors[1].TurnOffset= -44.78 + 30;//
+	chassis.motors[2].TurnOffset= -119.49 + 30;//  //此处校准舵电机 正常加减30°的倍数
+	chassis.motors[3].TurnOffset= -6.5 + 90 + 180;//
 
 	// 斜坡函数初始化
 	Slope_Init(&chassis.move.xSlope, 40, 0);
@@ -55,8 +55,7 @@ void Chassis_Init()
 
 void Chassis_InitPID()
 {
-	PID_Init(&chassis.rotate.pid, 0.2, 0, 0.3, 2, 15); // 15	PID_Init(&chassis.rotate.pid, 0.4, 0.001, 0.15, 0, 15); // 15
-
+	PID_Init(&chassis.rotate.pid, 0.25, 0, 6, 2, 15); // 15	PID_Init(&chassis.rotate.pid, 0.4, 0.001, 0.15, 0, 15); // 15
 	PID_SetDeadzone(&chassis.rotate.pid, 0.1);
 }
 
@@ -154,15 +153,12 @@ void Task_Chassis_Callback()
 	{
 			Slope_SetTarget(&chassis.move.xSlope,1.5f * vx); //x为前后
 			Slope_SetTarget(&chassis.move.ySlope,1.5f * vy);
-    	float gimbalAngleSin=sin(-chassis.rotate.relativeAngle*PI/180);
+    		float gimbalAngleSin=sin(-chassis.rotate.relativeAngle*PI/180);
 			float gimbalAngleCos=cos(-chassis.rotate.relativeAngle*PI/180);
 			chassis.move.vx=-(Slope_GetVal(&chassis.move.xSlope) * gimbalAngleCos + Slope_GetVal(&chassis.move.ySlope) * gimbalAngleSin);
 			chassis.move.vy=(-Slope_GetVal(&chassis.move.xSlope) * gimbalAngleSin + Slope_GetVal(&chassis.move.ySlope) * gimbalAngleCos);
-//      chassis.move.vx = Slope_GetVal(&chassis.move.xSlope);
-//      chassis.move.vy = Slope_GetVal(&chassis.move.ySlope);
 			Chassis_UpdateSlope();
 		if (vision_receive.spin_mode == 0)
-//    if (mode_test == 1)
 				chassis.rotate.mode = ChassisMode_Follow;
 		else
 				chassis.rotate.mode = ChassisMode_Spin;	
@@ -207,22 +203,32 @@ void Task_Chassis_Callback()
 				}
 			else
 				{
-          Slope_SetTarget(&chassis.move.spinSlope, 0);
-					if (chassis.rotate.fake_relativeAngle >= 180)
-						chassis.rotate.fake_relativeAngle -= 360;
-					if (chassis.rotate.fake_relativeAngle < -180)
-						chassis.rotate.fake_relativeAngle += 360;
-					if (a == 0)
+					Slope_SetTarget(&chassis.move.spinSlope, 0);
+					if (chassis.rotate.relativeAngle >= 180)
+						chassis.rotate.relativeAngle -= 360;
+					if (chassis.rotate.relativeAngle < -180)
+						chassis.rotate.relativeAngle += 360;
+					if (vision_receive.align_mode == 1)
 					{
-						PID_SingleCalc(&chassis.rotate.pid, 0, chassis.rotate.fake_relativeAngle);
+						float target = -chassis.rotate.align_yaw;
+						float feedback = -chassis.rotate.relativeAngle;
+						if (target - feedback > 180.0f)
+						{
+							feedback += 360.0f;
+						}
+						else if (target - feedback < -180.0f)
+						{
+							feedback -= 360.0f;
+						}
+						PID_SingleCalc(&chassis.rotate.pid, target, feedback);
+						chassis.move.vw = chassis.rotate.pid.output + chassis.move.spinSlope.value;
+						LIMIT(chassis.move.vw, -chassis.move.maxVw, chassis.move.maxVw);
 					}
-					else
+					else 
 					{
-						chassis.rotate.fake_relativeAngle = 0;
-						chassis.rotate.pid.output = 0;
+						chassis.move.vw = vw;
+						LIMIT(chassis.move.vw, -chassis.move.maxVw, chassis.move.maxVw);
 					}
-					chassis.move.vw = chassis.rotate.pid.output + chassis.move.spinSlope.value;
-					LIMIT(chassis.move.vw, -chassis.move.maxVw, chassis.move.maxVw);
 				}
 	}
 	else if (chassis.rotate.mode == ChassisMode_Spin) //小陀螺模式
@@ -278,7 +284,6 @@ void Task_Chassis_Callback()
 	//	舵轮解算
 	for (uint8_t i = 0; i < 4; i++)
 	{
-		Motor_CalcAngle_J4310(&chassis.motors[i]);
 		if (wheelRPM[i] != 0)
 		{
 			if (wheelvx[i] == 0)   //轮速为0 90度  
@@ -307,31 +312,7 @@ void Task_Chassis_Callback()
 			if(ABS(chassis.motors[i].now_Speed) < 100) /*|| detectList[DeviceID_ChassisMotor1 + i].isLost == 1*/
 					targetangle[i] = default_angle[i];
 		}//当目标速度为0 且电机速度已经减下来时  舵回到正常角度
-//for (uint8_t i = 0; i < 4; i++) 
-//{
-//    Motor_CalcAngle_J4310(&chassis.motors[i]);
 
-//    if (wheelRPM[i] != 0) 
-//    {
-//        // 1. 用 atan2f 一步到位解算出弧度 (-PI 到 PI)
-//        // 传入 -wheelvy 是为了完美匹配你代码中的顺时针角度定义
-//        float angle_deg = atan2f(-wheelvy[i], wheelvx[i]) * (180.0f / PI);
-
-//        // 2. 将范围从 [-180, 180] 映射到 [0, 360]
-//        if (angle_deg < 0) {
-//            angle_deg += 360.0f;
-//        }
-//        targetangle[i] = angle_deg;
-//    } 
-//    else 
-//    {
-//        // 3. 目标速度为 0 且实际速度降下来时，摆出 X 形状锁定底盘（防止漂移）
-//        static const float default_angle[4] = {135.0f, 45.0f, 45.0f, 135.0f};
-//        
-//        if (ABS(chassis.motors[i].now_Speed) < 100) {
-//            targetangle[i] = default_angle[i];
-//        }
-//    }
 		if (targetangle[i] - chassis.motors[i].now_angle >= 180)
 			targetangle[i] = targetangle[i] - 360;
 		else if (targetangle[i] - chassis.motors[i].now_angle < -180)
@@ -347,7 +328,6 @@ void Task_Chassis_Callback()
 			wheelRPM[i] = -wheelRPM[i];
 		}
 		chassis.motors[i].targetTurnAngle = targetangle[i];
-		chassis.motors[i].multi_targetTurnAngle = chassis.motors[i].totalAngle +(chassis.motors[i].targetTurnAngle - chassis.motors[i].now_angle);
 		chassis.motors[i].targetDriveSpeed = wheelRPM[i];
 	}
 }
@@ -355,15 +335,11 @@ void Task_Chassis_Callback()
 
 void OS_ChassisCallback(void const * argument)
 {
-		osDelay(500);
-		Chassis_Init();
-		Motor_StartCalcAngle_J4310(&chassis.motors[0]);
-		Motor_StartCalcAngle_J4310(&chassis.motors[1]);
-		Motor_StartCalcAngle_J4310(&chassis.motors[2]);
-		Motor_StartCalcAngle_J4310(&chassis.motors[3]);
+	osDelay(500);
+	Chassis_Init();
     for(;;)
     {
-				Task_Chassis_Callback();
+		Task_Chassis_Callback();
         osDelay(2);
     }
 }

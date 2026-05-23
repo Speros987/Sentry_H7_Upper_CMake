@@ -1,4 +1,5 @@
 #include "USER_B2B.h"
+#include "Chassis.h"
 #include "usart.h"
 #include "cmsis_os.h"
 #include "chassis.h"
@@ -32,13 +33,13 @@ void B2B_Transmit()
 		usart2TxBuf[0] = 0xAA;				 // 帧头
 		for(uint8_t i = 0; i < 4; i++)
 		{
-			float v = chassis.motors[i].multi_targetTurnAngle;
+			float v = chassis.motors[i].targetTurnAngle - chassis.motors[i].now_angle;   // 要发送的那个 float
 			uint8_t *p = (uint8_t *)&v;
-			usart2TxBuf[1  + 4*i] = p[0];
+			usart2TxBuf[1 + 4*i] = p[0];
 			usart2TxBuf[2 + 4*i] = p[1];
 			usart2TxBuf[3 + 4*i] = p[2];
 			usart2TxBuf[4 + 4*i] = p[3];
-		} //1-16 舵电机目标角度（多圈）
+		} //1-16 舵电机误差角度
 		for (uint8_t i = 0; i < 4; i++)
 		{
 			usart2TxBuf[17 + i * 2] = chassis.motors[i].targetDriveSpeed;
@@ -54,7 +55,7 @@ void B2B_Transmit()
 			usart2TxBuf[28] = p[3];
 		}	//25-28 yaw电机目标速度
 
-		memcpy(&usart2TxBuf[29], &USER_SentryCmd, sizeof(USER_SentryCmd_t)); //29-32 哨兵自主指令
+		memcpy(&usart2TxBuf[29], &USER_SentryCmd, sizeof(USER_SentryCmd_t)); //29-35 哨兵自主指令
 
 		usart2TxBuf[62]  = STOPFLAG;    // 急停标志
 		usart2TxBuf[63] = 0xFE;				 // 帧尾
@@ -69,13 +70,13 @@ void B2B_Receive(void)
 	{
 		for(uint8_t i = 0; i < 4; i++)
 		{
-				float v;
-				uint8_t *p = (uint8_t *)&v;
-				p[0] = usart2RxBuf[1 + 4*i];
-				p[1] = usart2RxBuf[2 + 4*i];
-				p[2] = usart2RxBuf[3 + 4*i];
-				p[3] = usart2RxBuf[4 + 4*i];
-				chassis.motors[i].TurnAngle = v;
+			float v;
+			uint8_t *p = (uint8_t *)&v;
+			p[0] = usart2RxBuf[1 + 4*i];
+			p[1] = usart2RxBuf[2 + 4*i];
+			p[2] = usart2RxBuf[3 + 4*i];
+			p[3] = usart2RxBuf[4 + 4*i];
+			chassis.motors[i].TurnAngle = v;
 		} //解析舵电机当前角度（单圈）单位° 1-16
 		
 		for (uint8_t i = 0; i < 4; i++)
@@ -83,13 +84,13 @@ void B2B_Receive(void)
 			chassis.motors[i].now_Speed = (int16_t)usart2RxBuf[17 + i * 2] | (int16_t)usart2RxBuf[17 + i * 2 + 1] << 8;
 		}//轮电机当前速度	17-24
 		{
-				float v;
-				uint8_t *p = (uint8_t *)&v;
-				p[0] = usart2RxBuf[25];
-				p[1] = usart2RxBuf[26];
-				p[2] = usart2RxBuf[27];
-				p[3] = usart2RxBuf[28];
-				gimbal.base_yawMotor.nowAngle = v;
+			float v;
+			uint8_t *p = (uint8_t *)&v;
+			p[0] = usart2RxBuf[25];
+			p[1] = usart2RxBuf[26];
+			p[2] = usart2RxBuf[27];
+			p[3] = usart2RxBuf[28];
+			gimbal.base_yawMotor.nowAngle = v;
 		}	//解析大yaw电机当前角度（单圈）单位° 25-28	
 		// {
 		// 		float v;

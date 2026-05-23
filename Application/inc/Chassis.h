@@ -51,10 +51,10 @@ typedef struct _Chassis
 	{
 		PID pid;				// 旋转PID，由relativeAngle计算底盘旋转速度
 		float relativeAngle;	// 云台与底盘的偏离角 单位度
-    float fake_relativeAngle; //ai传来假底盘和假云台之间的偏离角 用于电控小陀螺 
+    	float align_yaw; 		//ai传来云台与垂直起伏路段方向的角度 用于底盘与起伏路段对齐
 		float InitAngle;		// 云台与底盘对齐时的编码器度数 
 		int16_t InitpitchAngle; // 云台水平时编码器值
-		float nowAngle;		// 此时云台的编码器换算为°值
+		float nowAngle;			// 此时云台的编码器换算为°值
 		ChassisMode mode;		// 底盘模式 小陀螺或者底盘跟随
 	} rotate;
 	chassis_pattern pattern;

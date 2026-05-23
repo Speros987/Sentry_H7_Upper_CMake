@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "stdbool.h"
+#include <stdint.h>
 
 #define    JUDGE_DATA_ERROR      0
 #define    JUDGE_DATA_CORRECT    1
@@ -450,20 +451,22 @@ typedef struct __attribute__((packed))
 /***********以上为发给ai的**************/
 	uint16_t shooter_barrel_cooling_value;  // 冷却速度
 	uint16_t shooter_barrel_heat_limit; 		//热量限制
+	uint16_t shooter_id1_17mm_cooling_heat; //17mm枪口热量
 	uint8_t power_management_gimbal_output : 1;
 	uint8_t power_management_chassis_output : 1;
 	uint8_t power_management_shooter_output : 1;
-	uint16_t shooter_17mm_barrel_heat;			//剩余热量
 	float initial_speed;										//弹速
 	uint8_t self_color;
 }JudgeData_t;
 
 typedef struct __attribute__((packed))
 {
-	uint8_t sentry_mode; //1为进攻 2为防守 3为移动
-	uint8_t energy_activation; //0为不激活 1为激活小符 2为激活大符 
-	uint8_t survive; //0为不买活 1为买活
-	uint8_t buy_bullet; //0为不买弹 1为买弹	//之后再说
+	uint8_t sentry_mode; //1为进攻 2为防守 3为移动 默认为3
+	uint8_t energy_activation; //0为不激活 1为激活小符 2为激活大符 激活小还是大和比赛开始时间有关
+	uint16_t buy_projectile; //哨兵要买多少发弹 开局为0 修改后烧饼在补血点就能兑换 只能单增 如0->100买100发 100->101买1发 依此类推
+	uint8_t buy_life; 	//0为不买活 1为买活
+	uint8_t remote_buy_blood;	//0到1为买一次 1到2为买一次 依此类推
+	uint8_t remote_buy_bullet; //0到1为买一次 1到2为买一次 依此类推
 }USER_SentryCmd_t; //哨兵机器人指令数据
 
 /****************函数声明***************/

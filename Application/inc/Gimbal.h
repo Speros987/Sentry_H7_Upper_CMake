@@ -8,7 +8,7 @@
 #include "Filter.h"
 
 #define TOP_YAW_OFFSET 2710  //此处校准小yaw
-#define INIT_YAW_ANGLE -60.0f   //此处校准大yaw
+#define INIT_YAW_ANGLE -85.0f   //此处校准大yaw
 #define PITCH_MOTOR_ZERO_POS 2.094f //此处校准pitch
 
 #define PITCH_DIRECTION -1

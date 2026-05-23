@@ -145,6 +145,9 @@ void Gimbal_Scan_Update(void)
     gimbal.pitch.targetAngle += pitch_wave_delta + convergence_step;
 
     last_ideal_pitch = current_ideal_pitch;
+	// if (vision_receive.armor_mode == 1) {
+	// 	gimbal.top_yaw.targetAngle = 
+	// }
 }
 
 void Gimbal_VisionCtrl()
@@ -249,18 +252,18 @@ void Gimbal_Follow_IMU(void)
 
 void Task_Gimbal_Callback()
 {
-		visionFindAver=Filter_AverCalc(&gimbal.visionFilter.find,vision.found);
+		visionFindAver=Filter_AverCalc(&gimbal.visionFilter.find,vision.tracking);
 		if(chassis.pattern == Chassis_control)
 		{
 			if(rcInfo.wheel<-400)
 				gimbal.visionEnable=true;
 			else
 				gimbal.visionEnable=false;
-			if(gimbal.visionEnable && vision.found)
+			if(gimbal.visionEnable && vision.tracking)
 			{
 				Gimbal_VisionCtrl();
 			}
-			else
+			else	
 				Gimbal_RockerCtrl();	 
 		}
     if(chassis.rotate.mode == ChassisMode_Spin)
@@ -283,7 +286,7 @@ void Task_Gimbal_Callback()
 				gimbal.scan_flag=false;
 			if(gimbal.scan_flag)
 			{
-				if(gimbal.visionEnable && vision.found)
+				if(gimbal.visionEnable && vision.tracking)
 				{
 					shooter.fricOpenFlag = 1;
 					Shooter_state(shooter.fricOpenFlag);

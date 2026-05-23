@@ -22,7 +22,7 @@
 #include "stm32h7xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "USER_RC.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,7 +42,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern uint8_t usart2RxBuf[256]; // 锟斤拷锟斤拷2锟斤拷锟斤拷锟斤拷
+extern uint8_t usart2RxBuf[256];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

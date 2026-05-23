@@ -237,16 +237,16 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 	}
 	if (huart == &huart5)
 	{
-#if (USER_RC_TYPE == USER_RC_TYPE_MC6C)
-		MC6C_ParseSBUS(usart5RxBuf, &rcInfo_MC6C);
-		MC6C_ToUnified(&rcInfo_MC6C, &rcInfo);
-#elif (USER_RC_TYPE == USER_RC_TYPE_DR16)
-		DR16_ParseSBUS(usart5RxBuf,&rcInfo_DR16);
-		DR16_ToUnified(&rcInfo_DR16, &rcInfo);
-#else
-		ET08_ParseSBUS(usart5RxBuf, &rcInfo_ET08);
-		ET08_ToUnified(&rcInfo_ET08, &rcInfo);
-#endif
+		#if (USER_RC_TYPE == USER_RC_TYPE_MC6C)
+			MC6C_ParseSBUS(usart5RxBuf, &rcInfo_MC6C);
+			MC6C_ToUnified(&rcInfo_MC6C, &rcInfo);
+		#elif (USER_RC_TYPE == USER_RC_TYPE_DR16)
+			DR16_ParseSBUS(usart5RxBuf,&rcInfo_DR16);
+			DR16_ToUnified(&rcInfo_DR16, &rcInfo);
+		#else
+			ET08_ParseSBUS(usart5RxBuf, &rcInfo_ET08);
+			ET08_ToUnified(&rcInfo_ET08, &rcInfo);
+		#endif
 		rc_true_flag = 0;
 		HAL_UARTEx_ReceiveToIdle_DMA(&huart5, usart5RxBuf, sizeof(usart5RxBuf));
 		__HAL_DMA_DISABLE_IT(&hdma_uart5_rx, DMA_IT_HT);
@@ -258,7 +258,6 @@ void Task_RC_Callback()
 	/**********特殊情况处理*********************/
 	if (rcInfo.right == 2) // 遥控器右拨码开关向下，急停
 	{
-
     	disable_motor_mode(&hfdcan2,0x01,MIT_MODE);
 		HAL_Delay(10);
 		USER_CAN_SetMotorCurrent(&hfdcan1, 0x1FF, 0, 0, 0, 0);

@@ -361,7 +361,11 @@ uint16_t JUDGE_GetHeatLimit()
 {
 	return GameRobotState.shooter_barrel_heat_limit;
 }
-
+// 获取当前枪管热量
+uint16_t JUDGE_GetNowHeat()
+{
+	return PowerHeatData.shooter_id1_17mm_cooling_heat;
+}
 // 获取射速限制
 uint16_t JUDGE_GetShootSpeedLimit()
 {
@@ -377,7 +381,7 @@ uint16_t JUDGE_GetPowerBuffer()
 // 获取剩余枪口热量
 int16_t JUDGE_GetRemainHeat()
 {
-	return (int16_t)GameRobotState.shooter_barrel_heat_limit - (int16_t)PowerHeatData.shooter_id1_17mm_cooling_heat;
+	return (int16_t)USER_JudgeData.shooter_barrel_heat_limit - (int16_t)USER_JudgeData.shooter_id1_17mm_cooling_heat;
 }
 
 // 剩余发弹数
@@ -407,7 +411,7 @@ uint16_t JUDGE_GetHP()
 // 获取冷却速度
 uint16_t JUDGE_GetCoolingValue()
 {
-	return GameRobotState.shooter_barrel_cooling_value;
+	return USER_JudgeData.shooter_barrel_cooling_value;
 }
 
 //获取弹速
@@ -522,12 +526,15 @@ void Judge_update()
 	USER_JudgeData.ally_outpost_hp = JUDGE_GetAllyOutpostHP();
 	USER_JudgeData.ally_base_hp = JUDGE_GetAllyBaseHP();
 
+
+	USER_JudgeData.ally_outpost_hp = JUDGE_GetAllyOutpostHP();
+	USER_JudgeData.ally_base_hp = JUDGE_GetAllyBaseHP();
 	USER_JudgeData.shooter_barrel_cooling_value = JUDGE_GetCoolingValue();	// 获取冷却速度
 	USER_JudgeData.shooter_barrel_heat_limit = JUDGE_GetHeatLimit();				//获取热量限制
+	USER_JudgeData.shooter_id1_17mm_cooling_heat = JUDGE_GetNowHeat(); // 获取17mm枪口热量
 	USER_JudgeData.power_management_chassis_output = JUDGE_GetChassisOutputState();
 	USER_JudgeData.power_management_gimbal_output = JUDGE_GetGimbalOutputState();
 	USER_JudgeData.power_management_shooter_output = JUDGE_GetShooterOutputState();
-	USER_JudgeData.shooter_17mm_barrel_heat = JUDGE_GetRemainHeat(); 			//获取剩余热量
 	USER_JudgeData.initial_speed = JUDGE_GetInitial_speed();				 			//获取当前弹速
 	USER_JudgeData.self_color = JUDGE_GetSelfColor();
 }
