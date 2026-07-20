@@ -4,15 +4,12 @@
 #include "main.h"
 #include "stdint.h"
 #include "stdbool.h"
+
 #include <math.h>
 #include <stdint.h>
 
 #define VISION_FRAME_HEADER_TX  	0x5A
 #define VISION_FRAME_HEADER_RX  	0xA5
-
-#ifndef PI
-#define PI 3.14159265f
-#endif
 
 typedef struct __attribute__((packed))
 {
@@ -69,25 +66,38 @@ typedef struct __attribute__((packed))
 	//uint16_t checksum;
 }VisionTransmit;
 
+enum { VISION_RECEIVE_NONE, VISION_RECEIVE_ARMOR, VISION_RECEIVE_RUNE };
 
 typedef struct __attribute__((packed))
 {
-	uint8_t header;
-	/*以下为视觉通信部分*/
-	/*打装甲板模式*/
-	uint8_t tracking; //0表示没瞄到 1表示瞄到装甲板 2表示瞄到符
-	
-	float base_yaw;  //自瞄目标角度 单位°
-	float top_yaw;	 //自瞄目标角度 单位°
-	float pitch;
-	
-	float incident_yaw;//单位弧度 （目标角度和目前角度差值，用于火控）
-	float distance;//两车中心距离
-	float armor_radius;	//装甲板的物理半径
+    uint8_t header;
+    /*以下为视觉通信部分*/
+    /*打装甲板模式*/
+    uint8_t mode;
 
-	uint8_t rune_number;  //打符模式使用 变化就打弹 打一发后没变化 0.5秒后再打一发
+    union {
+        struct __attribute__((packed)) {
+            float base_yaw;
+            float yaw;
+            float pitch;
+            float incident_yaw;
+            float distance;
+            float hit_radius;
+        } armor;
 
-	uint8_t force_shoot;//检测到 强制开一发火 0是不开 1为开火
+        struct __attribute__((packed)) {
+            float base_yaw;
+            float hit_radius;
+            float yaw[2];
+            float pitch[2];
+            float incident_yaw[2];
+            float distance[2];
+            float hit_time[2];
+            int8_t index[2];
+        } rune;
+    };
+
+    uint8_t force_shoot;//检测到 强制开一发火 0是不开 1为开火
 	
 /***********以下为ai传输内容***********/
 	float linear_x;
@@ -110,24 +120,16 @@ typedef struct __attribute__((packed))
 	uint8_t end_frame;   
 }VisionReceive;
 
-typedef struct
-{	
-	float base_yaw;
-	float top_yaw;
-	float pitch;
-	uint8_t mode;
-	uint8_t tracking;
-	float fire;
-	float v_yaw;
-	float distance;//两车中心距离
-	float distance_to_center;//云台中心到锁定装甲板中心距离
-	float yaw_slope;
-	float pitch_slope;
-}Vision_t;
+typedef struct {
+    bool vaild;
+    float base_yaw;
+    float yaw;
+    float pitch;
+} VisionTarget;
 
 extern VisionReceive vision_receive;
 extern VisionTransmit vision_transmit;
-extern Vision_t vision;
+extern VisionTarget vision_target;
 
 void Vision_DataReceive(uint8_t *read_from_usart, uint32_t length);
 void Vision_DataTransmit(void);

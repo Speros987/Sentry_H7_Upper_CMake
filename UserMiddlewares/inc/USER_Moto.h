@@ -5,7 +5,6 @@
 #include "bsp_can.h"
 #include "fdcan.h"
 #include "PID.h"
-#include "SMC.h"
 
 //各种电机编码值与角度的换算
 #define MOTOR_M3508_DGR2CODE(dgr) ((int32_t)((dgr)*436.9263f)) //3591/187 * 8191/360
@@ -50,10 +49,7 @@ typedef struct DJIMOTOR
 	uint8_t ERRORFLAG;
 	
 	PID speedPID;		 // 速度pid(单级)
-	CascadePID anglePID; // 角度pid，串级
-	
-	SMC FricSMC;
-	
+	CascadePID anglePID; // 角度pid，串级	
 } DJI_Motor_t;
 
 typedef struct
@@ -76,17 +72,17 @@ typedef struct
 
 typedef struct
 {
-		uint16_t mode;          // 电机控制模式
-    	motor_fbpara_t para;  	// 电机的反馈信息结构体
-	
-		float totalAngle;				//电机旋转总角度 单位°
-		float lastAngle;				//电机上一时刻角度 单位°
-		float nowAngle;					//电机当前角度 单位°
-		float targetTurnAngle;  //电机目标旋转角度  单位°
-	
-		PID speedPID;					  // 速度pid(单级)
-		CascadePID anglePID;	  // 角度pid(串级)
-	
+	uint16_t mode;          // 电机控制模式
+	motor_fbpara_t para;  	// 电机的反馈信息结构体
+
+	float totalAngle;				//电机旋转总角度 单位°
+	float lastAngle;				//电机上一时刻角度 单位°
+	float nowAngle;					//电机当前角度 单位°
+	float targetTurnAngle;  //电机目标旋转角度  单位°
+
+	PID speedPID;					  // 速度pid(单级)
+	CascadePID anglePID;	  // 角度pid(串级)
+
 } DM_motor_t;
 
 typedef struct

@@ -1,5 +1,6 @@
 #include "cRc.h"
 
+#include <stdbool.h>
 
 ///////////CRC_check_function crc8    generator polynomial:G(x)=x8+x5+x4+1
 const unsigned char CRC8_INIT = 0xff;

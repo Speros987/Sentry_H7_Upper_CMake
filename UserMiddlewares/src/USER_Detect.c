@@ -88,30 +88,28 @@ void Task_Detect_Callback()
 {
 	uint32_t presentTime = HAL_GetTick();
 
+	for (uint8_t id = 0; id < DETECT_DEVICE_NUM; id++)
 	{
-		for (uint8_t id = 0; id < DETECT_DEVICE_NUM; id++)
+		// 判定是否掉线
+		if (presentTime - detectList[id].lastRecieveTime > detectList[id].maxInterval)
 		{
-			// 判定是否掉线
-			if (presentTime - detectList[id].lastRecieveTime > detectList[id].maxInterval)
-			{
-				// 判定执行默认还是自定义的处理函数
-				if (detectList[id].lostFunc == NULL)
-					Detect_DefaultLostHandler(id);
-				else
-					detectList[id].lostFunc();
-				// 更新标识
-				detectList[id].isLost = 1;
-			}
-			else if (presentTime - detectList[id].lastRecieveTime <= detectList[id].maxInterval)
-			{
-				// 判定执行默认还是自定义的处理函数
-				if (detectList[id].recoverFunc == NULL)
-					Detect_DefaultRecoverHandler(id);
-				else
-					detectList[id].recoverFunc();
-				// 更新标识
-				detectList[id].isLost = 0;
-			}
+			// 判定执行默认还是自定义的处理函数
+			if (detectList[id].lostFunc == NULL)
+				Detect_DefaultLostHandler(id);
+			else
+				detectList[id].lostFunc();
+			// 更新标识
+			detectList[id].isLost = 1;
+		}
+		else if (presentTime - detectList[id].lastRecieveTime <= detectList[id].maxInterval)
+		{
+			// 判定执行默认还是自定义的处理函数
+			if (detectList[id].recoverFunc == NULL)
+				Detect_DefaultRecoverHandler(id);
+			else
+				detectList[id].recoverFunc();
+			// 更新标识
+			detectList[id].isLost = 0;
 		}
 	}
 }

@@ -1,8 +1,10 @@
-/****************PIDÔËËã****************/
+/****************PIDï¿½ï¿½ï¿½ï¿½****************/
 
 #include "PID.h"
 
-//³õÊ¼»¯pid²ÎÊı
+#include <math.h>
+
+//ï¿½ï¿½Ê¼ï¿½ï¿½pidï¿½ï¿½ï¿½ï¿½
 void PID_Init(PID *pid,float p,float i,float d,float maxI,float maxOut)
 {
 	pid->kp=p;
@@ -13,7 +15,7 @@ void PID_Init(PID *pid,float p,float i,float d,float maxI,float maxOut)
 	pid->deadzone=0;
 }
 
-//³õÊ¼»¯Î¢·ÖÏÈĞĞpid²ÎÊı
+//ï¿½ï¿½Ê¼ï¿½ï¿½Î¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½pidï¿½ï¿½ï¿½ï¿½
 void DEPID_Init(DEPID *pid,float p,float i,float d,float maxI,float maxOut,float gama)
 {
 	pid->kp=p;
@@ -38,62 +40,62 @@ void PD_Init(PD_Controller *pd,float kp,float kd,float maxTorque)
 }
 
 
-//µ¥¼¶Î¢·ÖÏÈĞĞpid¼ÆËã
+//ï¿½ï¿½ï¿½ï¿½Î¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½pidï¿½ï¿½ï¿½ï¿½
 void PIDRegulation(DEPID *vPID,float reference, float feedback, float differentiation)
 {
-	//¸üĞÂÊı¾İ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	vPID->lasterror=vPID->error;
 	vPID->error=reference-feedback;
-	//Î¢·ÖÂË²¨
+	//Î¢ï¿½ï¿½ï¿½Ë²ï¿½
 	differentiation = vPID->gama * differentiation + (1-vPID->gama) * vPID-> lastPv;
-	//¼ÆËãÎ¢·Ö
+	//ï¿½ï¿½ï¿½ï¿½Î¢ï¿½ï¿½
 	vPID->output = differentiation * vPID->kd;
-	//¼ÆËã±ÈÀı
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	vPID->output+=vPID->error*vPID->kp;
-	//¼ÆËã»ı·Ö
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	vPID->integral+=vPID->error*vPID->ki;
-	LIMIT(vPID->integral,-vPID->maxIntegral,vPID->maxIntegral);//»ı·ÖÏŞ·ù
+	LIMIT(vPID->integral,-vPID->maxIntegral,vPID->maxIntegral);//ï¿½ï¿½ï¿½ï¿½ï¿½Ş·ï¿½
 	vPID->output+=vPID->integral;
-	//Êä³öÏŞ·ù
+	//ï¿½ï¿½ï¿½ï¿½Ş·ï¿½
 	LIMIT(vPID->output,-vPID->maxOutput,vPID->maxOutput);
-	//¸üĞÂÎ¢·ÖÂË²¨
+	//ï¿½ï¿½ï¿½ï¿½Î¢ï¿½ï¿½ï¿½Ë²ï¿½
 	vPID-> lastPv = differentiation;
 }
 
-//µ¥¼¶pid¼ÆËã
+//ï¿½ï¿½ï¿½ï¿½pidï¿½ï¿½ï¿½ï¿½
 void PID_SingleCalc(PID *pid,float reference,float feedback)
 {
-	//¸üĞÂÊı¾İ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	pid->lastError=pid->error;
-	if(ABS(reference-feedback) < pid->deadzone)//ÈôÎó²îÔÚËÀÇøÄÚÔòerrorÖ±½ÓÖÃ0
+	if(ABS(reference-feedback) < pid->deadzone)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½errorÖ±ï¿½ï¿½ï¿½ï¿½0
 		pid->error=0;
 	else
 		pid->error=reference-feedback;
-	//¼ÆËãÎ¢·Ö
+	//ï¿½ï¿½ï¿½ï¿½Î¢ï¿½ï¿½
 	pid->output=(pid->error-pid->lastError)*pid->kd;
-	//¼ÆËã±ÈÀı
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	pid->output+=pid->error*pid->kp;
-	//¼ÆËã»ı·Ö
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	pid->integral+=pid->error*pid->ki;
-	LIMIT(pid->integral,-pid->maxIntegral,pid->maxIntegral);//»ı·ÖÏŞ·ù
+	LIMIT(pid->integral,-pid->maxIntegral,pid->maxIntegral);//ï¿½ï¿½ï¿½ï¿½ï¿½Ş·ï¿½
 	pid->output+=pid->integral;
-	//Êä³öÏŞ·ù
+	//ï¿½ï¿½ï¿½ï¿½Ş·ï¿½
 	LIMIT(pid->output,-pid->maxOutput,pid->maxOutput);
 }
 
-//´®¼¶pid¼ÆËã
+//ï¿½ï¿½ï¿½ï¿½pidï¿½ï¿½ï¿½ï¿½
 void PID_CascadeCalc(CascadePID *pid,float angleRef,float angleFdb,float speedFdb)
 {
-	PID_SingleCalc(&(pid->outer),angleRef,angleFdb);//¼ÆËãÍâ»·(½Ç¶È»·)
-	PID_SingleCalc(&(pid->inner),pid->outer.output ,speedFdb);//¼ÆËãÄÚ»·(ËÙ¶È»·)
+	PID_SingleCalc(&(pid->outer),angleRef,angleFdb);//ï¿½ï¿½ï¿½ï¿½ï¿½â»·(ï¿½Ç¶È»ï¿½)
+	PID_SingleCalc(&(pid->inner),pid->outer.output ,speedFdb);//ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½(ï¿½Ù¶È»ï¿½)
 	pid->output=pid->inner.output;
 }
 
-//´®¼¶Î¢·ÖÏÈĞĞpid¼ÆËã		ÊÊÓÃÓÚÔÆÌ¨ TODO²¦µ¯µÈÆäËûµç»ú
+//ï¿½ï¿½ï¿½ï¿½Î¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½pidï¿½ï¿½ï¿½ï¿½		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ TODOï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void DEPID_CascadeCalc(CascadePID *pid,float angleRef,float angleFdb,float speedFdb)
 {
-	PIDRegulation(&(pid->deOuter),angleRef,angleFdb,-speedFdb);//¼ÆËãÍâ»·Î¢·ÖÏÈĞĞ(½Ç¶È»·)
-	PID_SingleCalc(&(pid->inner),pid->deOuter.output ,speedFdb);//¼ÆËãÄÚ»·(ËÙ¶È»·)
+	PIDRegulation(&(pid->deOuter),angleRef,angleFdb,-speedFdb);//ï¿½ï¿½ï¿½ï¿½ï¿½â»·Î¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½Ç¶È»ï¿½)
+	PID_SingleCalc(&(pid->inner),pid->deOuter.output ,speedFdb);//ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½(ï¿½Ù¶È»ï¿½)
 	pid->output=pid->inner.output;
 }
 
@@ -102,21 +104,21 @@ void PD_ParallelCalc(PD_Controller *pd,float p_des,float v_des,float p_meas,floa
 {
     float pos_err;
     float vel_err;
-    /* Î»ÖÃÎó²î */
+    /* Î»ï¿½ï¿½ï¿½ï¿½ï¿½ */
     pos_err = p_des - p_meas;
     if (ABS(pos_err) < pd->deadzone)
         pos_err = 0.0f;
-    /* ËÙ¶ÈÎó²î */
+    /* ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½ */
     vel_err = v_des - v_meas;
     if (ABS(vel_err) < pd->deadzone)
         vel_err = 0.0f;
-    /* ²¢¼¶ PD + Ç°À¡ */
+    /* ï¿½ï¿½ï¿½ï¿½ PD + Ç°ï¿½ï¿½ */
     pd->outputTorque = pd->kp * pos_err + pd->kd * vel_err + pd->torque_ff;
-    /* Á¦¾ØÏŞ·ù */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ş·ï¿½ */
     LIMIT(pd->outputTorque,-pd->maxTorque,pd->maxTorque);
 }
 
-//Çå¿ÕÒ»¸öpidµÄÀúÊ·Êı¾İ
+//ï¿½ï¿½ï¿½Ò»ï¿½ï¿½pidï¿½ï¿½ï¿½ï¿½Ê·ï¿½ï¿½ï¿½ï¿½
 void PID_Clear(PID *pid)
 {
 	pid->error=0;
@@ -136,13 +138,13 @@ void DEPID_Clear(DEPID *pid)
 
 
 
-//ÖØĞÂÉè¶¨pidÊä³öÏŞ·ù
+//ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨pidï¿½ï¿½ï¿½ï¿½Ş·ï¿½
 void PID_SetMaxOutput(PID *pid,float maxOut)
 {
 	pid->maxOutput=maxOut;
 }
 
-//ÉèÖÃPIDËÀÇø
+//ï¿½ï¿½ï¿½ï¿½PIDï¿½ï¿½ï¿½ï¿½
 void PID_SetDeadzone(PID *pid,float deadzone)
 {
 	pid->deadzone=deadzone;

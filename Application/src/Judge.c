@@ -6,6 +6,8 @@
 #include "usart.h"
 #include "USER_B2B.h"
 #include "myQueue.h"
+
+#include <stdbool.h>
 #define DISABLE_JUDGE_TASK
 
 /*****************系统数据定义**********************/
@@ -179,126 +181,21 @@ bool JUDGE_Read_Data(uint8_t *ReadFromUsart)
 	return retval_tf; // 对数据正误做处理
 }
 
- void USART1_dma_init()
- {
-// 	LL_USART_SetTransferDirection(USART1, LL_USART_DIRECTION_TX_RX);
-
-// 	// IT trans
-//	LL_USART_EnableIT_IDLE(USART1);
-// 	LL_DMA_SetMemoryAddress(DMA2, LL_DMA_STREAM_0, (uint32_t)usart1RxBuf);
-// 	LL_DMA_SetDataLength(DMA2, LL_DMA_STREAM_0, sizeof(usart1RxBuf));
-// 	LL_DMA_SetPeriphAddress(DMA2, LL_DMA_STREAM_0, (uint32_t)&USART1->RDR);
-// 	LL_DMA_EnableIT_TC(DMA2, LL_DMA_STREAM_0);
-// 	LL_DMA_EnableStream(DMA2, LL_DMA_STREAM_0);
-//  LL_USART_EnableDMAReq_RX(USART1);
-//  
-// 	// send
-// 	LL_DMA_SetPeriphAddress(DMA2, LL_DMA_STREAM_1, (uint32_t)&USART1->TDR);
-// 	LL_USART_EnableDMAReq_TX(USART1);
-// 	LL_DMA_EnableIT_TC(DMA2, LL_DMA_STREAM_1);
- }
-
-
-void USER_USART1_IRQHandler(void)
-{
-//    if (LL_USART_IsActiveFlag_IDLE(USART1) && LL_USART_IsEnabledIT_IDLE(USART1))
-//    {
-//        LL_DMA_DisableStream(DMA2, LL_DMA_STREAM_0);               
-////        int usart1RxLen=JUDGE_MAX_RX_LENGTH - LL_DMA_GetDataLength(DMA2, LL_DMA_STREAM_0);
-//        // 解析串口数据       
-//                JUDGE_Read_Data(usart1RxBuf);
-////                judgedata_update();
-//                memset(usart1RxBuf,0,sizeof(usart1RxBuf));                         
-//                LL_DMA_SetDataLength(DMA2, LL_DMA_STREAM_0,JUDGE_MAX_RX_LENGTH);
-//                LL_DMA_EnableStream(DMA2, LL_DMA_STREAM_0);
-//                LL_USART_ClearFlag_IDLE(USART1);     
-//    }
-}
-
-////串口1中断回调
-//void USER_USART1_IRQHandler()
-//{
-//	if (LL_USART_IsActiveFlag_IDLE(USART1) && LL_USART_IsEnabledIT_IDLE(USART1))
-//	{
-//		LL_DMA_DisableStream(DMA2, LL_DMA_STREAM_0);
-
-//		// 获取接收到的数据长度
-//		uint16_t rxLen = JUDGE_MAX_RX_LENGTH - LL_DMA_GetDataLength(DMA2, LL_DMA_STREAM_0);
-//		JUDGE_Read_Data(usart1RxBuf);
-//		
-//		memset(usart1RxBuf,0,sizeof(usart1RxBuf));
-//		LL_DMA_SetDataLength(DMA2, LL_DMA_STREAM_0, JUDGE_MAX_RX_LENGTH);
-//		LL_DMA_EnableStream(DMA2, LL_DMA_STREAM_0);
-//		LL_USART_ClearFlag_IDLE(USART1);
-//		
-//		Detect_Update(DeviceID_Judge);
-//	}
-//}
-
-
-void USART1_DMA_Send(uint8_t *tx_buffer, uint16_t size)
-{
-//	while (LL_DMA_IsEnabledStream(DMA2, LL_DMA_STREAM_1) &&
-//		   !LL_DMA_IsActiveFlag_TC1(DMA2))
-//	{
-//		// 设置超时，避免死等
-//		static uint32_t timeout = 0;
-//		if (++timeout > 10000)
-//		{
-//			LL_DMA_DisableStream(DMA2, LL_DMA_STREAM_1);
-//			LL_DMA_ClearFlag_TC1(DMA2);
-//			timeout = 0;
-//			break;
-//		}
-//	}
-//	LL_DMA_ClearFlag_TC1(DMA2);
-//	LL_DMA_DisableStream(DMA2, LL_DMA_STREAM_1);
-//	LL_DMA_ConfigTransfer(DMA2, LL_DMA_STREAM_1,
-//						  LL_DMA_DIRECTION_MEMORY_TO_PERIPH |
-//							  LL_DMA_MEMORY_INCREMENT |
-//							  LL_DMA_PERIPH_NOINCREMENT |
-//							  LL_DMA_PDATAALIGN_BYTE |
-//							  LL_DMA_MDATAALIGN_BYTE);
-//	LL_DMA_SetPeriphAddress(DMA2, LL_DMA_STREAM_1, (uint32_t)&USART1->TDR);
-//	LL_DMA_SetMemoryAddress(DMA2, LL_DMA_STREAM_1, (uint32_t)tx_buffer);
-//	LL_DMA_SetDataLength(DMA2, LL_DMA_STREAM_1, size);
-//	LL_DMA_EnableStream(DMA2, LL_DMA_STREAM_1);
-}
-
 extern DMA_HandleTypeDef hdma_usart1_rx;
 
 // 裁判系统掉线回调函数
 void Judge_UartLostCallback()
 {
-	
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart1,usart1RxBuf,sizeof(usart1RxBuf));
-		__HAL_DMA_DISABLE_IT(&hdma_usart1_rx , DMA_IT_HT);
-	
-//	LL_DMA_DisableStream(DMA2, LL_DMA_STREAM_0);
-//	// 清除所有标志位
-//	LL_USART_ClearFlag_IDLE(USART1);
-//	LL_USART_ClearFlag_ORE(USART1);
-//	LL_USART_ClearFlag_FE(USART1);
-//	LL_USART_ClearFlag_NE(USART1);
-//	LL_USART_ClearFlag_PE(USART1);
-
-//	memset(usart1RxBuf, 0, sizeof(usart1RxBuf));
-//	Judge_Data_TF = FALSE;
-//	LL_DMA_SetDataLength(DMA2, LL_DMA_STREAM_0, sizeof(usart1RxBuf));
-//	LL_DMA_SetMemoryAddress(DMA2, LL_DMA_STREAM_0, (uint32_t)usart1RxBuf);
-//	LL_USART_EnableIT_IDLE(USART1);
-//	LL_DMA_EnableStream(DMA2, LL_DMA_STREAM_0);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart1,usart1RxBuf,sizeof(usart1RxBuf));
+	__HAL_DMA_DISABLE_IT(&hdma_usart1_rx , DMA_IT_HT);
 }
 // 裁判系统初始化
 
 
 void JUDGE_Init()
 {
-
-//	USART1_dma_init();
-
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart1,usart1RxBuf,sizeof(usart1RxBuf));
-		__HAL_DMA_DISABLE_IT(&hdma_usart1_rx , DMA_IT_HT);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart1,usart1RxBuf,sizeof(usart1RxBuf));
+	__HAL_DMA_DISABLE_IT(&hdma_usart1_rx , DMA_IT_HT);
 }
 
 
@@ -482,46 +379,46 @@ void Judge_update()
 	
 	// bit1 是否检测到堡垒
 	if (RfidStatus.rfid_status & (1 << 17))
-			USER_JudgeData.sentry_info_3 |= (1 << 1);
+		USER_JudgeData.sentry_info_3 |= (1 << 1);
 	else
-			USER_JudgeData.sentry_info_3 &= ~(1 << 1);
+		USER_JudgeData.sentry_info_3 &= ~(1 << 1);
 
 	// bit2 是否检测到补给区（与兑换站不重叠）
 	if (RfidStatus.rfid_status & (1 << 19))
-			USER_JudgeData.sentry_info_3 |= (1 << 2);
+		USER_JudgeData.sentry_info_3 |= (1 << 2);
 	else
-			USER_JudgeData.sentry_info_3 &= ~(1 << 2);
+		USER_JudgeData.sentry_info_3 &= ~(1 << 2);
 
 	// bit3 补给区（与兑换站重叠）
 	if (RfidStatus.rfid_status & (1 << 20))
-			USER_JudgeData.sentry_info_3 |= (1 << 3);
+		USER_JudgeData.sentry_info_3 |= (1 << 3);
 	else
-			USER_JudgeData.sentry_info_3 &= ~(1 << 3);
+		USER_JudgeData.sentry_info_3 &= ~(1 << 3);
 
 	// bit4 能量 <30%
 	if (BuffMusk.remaining_energy != 0x80)
 	{
-			if (BuffMusk.remaining_energy & (1 << 3))
-					USER_JudgeData.sentry_info_3 &= ~(1 << 4);
-			else
-					USER_JudgeData.sentry_info_3 |= (1 << 4);
+		if (BuffMusk.remaining_energy & (1 << 3))
+			USER_JudgeData.sentry_info_3 &= ~(1 << 4);
+		else
+			USER_JudgeData.sentry_info_3 |= (1 << 4);
 	}
 	else
 	{
-			USER_JudgeData.sentry_info_3 &= ~(1 << 4);
+		USER_JudgeData.sentry_info_3 &= ~(1 << 4);
 	}
 
 	// 对方前哨站增益点 bit5
 	if (RfidStatus.rfid_status & (1 << 18))
-			USER_JudgeData.sentry_info_3 |= (1 << 5);
+		USER_JudgeData.sentry_info_3 |= (1 << 5);
 	else
-			USER_JudgeData.sentry_info_3 &= ~(1 << 5);
+		USER_JudgeData.sentry_info_3 &= ~(1 << 5);
 
 	// 对方堡垒增益点 bit6
 	if (RfidStatus.rfid_status & (1 << 24))
-			USER_JudgeData.sentry_info_3 |= (1 << 6);
+		USER_JudgeData.sentry_info_3 |= (1 << 6);
 	else
-			USER_JudgeData.sentry_info_3 &= ~(1 << 6);
+		USER_JudgeData.sentry_info_3 &= ~(1 << 6);
 
 	USER_JudgeData.ally_outpost_hp = JUDGE_GetAllyOutpostHP();
 	USER_JudgeData.ally_base_hp = JUDGE_GetAllyBaseHP();

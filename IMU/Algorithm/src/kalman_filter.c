@@ -136,9 +136,9 @@ static void H_K_R_Adjustment(KalmanFilter_t *kf);
 
 void* user_malloc(size_t size)
 {
-	void* tmp = 0;
-	tmp = pvPortMalloc(size);
-	return tmp;
+    void* tmp = 0;
+    tmp = pvPortMalloc(size);
+    return tmp;
 }
 
 
@@ -256,14 +256,14 @@ void Kalman_Filter_Init(KalmanFilter_t *kf, uint8_t xhatSize, uint8_t uSize, uin
 
     kf->S_data = (float *)user_malloc(sizeof_float * kf->xhatSize * kf->xhatSize);
     memset(kf->S_data, 0, sizeof_float * kf->xhatSize * kf->xhatSize);
-	kf->temp_matrix_data = (float *)user_malloc(sizeof_float * kf->xhatSize * kf->xhatSize);
-	memset(kf->temp_matrix_data, 0, sizeof_float * kf->xhatSize * kf->xhatSize);
+    kf->temp_matrix_data = (float *)user_malloc(sizeof_float * kf->xhatSize * kf->xhatSize);
+    memset(kf->temp_matrix_data, 0, sizeof_float * kf->xhatSize * kf->xhatSize);
     kf->temp_matrix_data1 = (float *)user_malloc(sizeof_float * kf->xhatSize * kf->xhatSize);
     memset(kf->temp_matrix_data1, 0, sizeof_float * kf->xhatSize * kf->xhatSize);
-	kf->temp_vector_data = (float *)user_malloc(sizeof_float * kf->xhatSize);
+    kf->temp_vector_data = (float *)user_malloc(sizeof_float * kf->xhatSize);
     memset(kf->temp_vector_data, 0, sizeof_float * kf->xhatSize);
-	kf->temp_vector_data1 = (float *)user_malloc(sizeof_float * kf->xhatSize);
-	memset(kf->temp_vector_data, 0, sizeof_float * kf->xhatSize);
+    kf->temp_vector_data1 = (float *)user_malloc(sizeof_float * kf->xhatSize);
+    memset(kf->temp_vector_data, 0, sizeof_float * kf->xhatSize);
 	
     Matrix_Init(&kf->S, kf->xhatSize, kf->xhatSize, (float *)kf->S_data);
     Matrix_Init(&kf->temp_matrix, kf->xhatSize, kf->xhatSize, (float *)kf->temp_matrix_data);
@@ -292,7 +292,7 @@ void Kalman_Filter_Reset(KalmanFilter_t *kf, uint8_t xhatSize, uint8_t uSize, ui
 
     memset(kf->xhat_data, 0, sizeof_float * xhatSize);
 
-	memset(kf->xhatminus_data, 0, sizeof_float * xhatSize);
+    memset(kf->xhatminus_data, 0, sizeof_float * xhatSize);
 	
     if(uSize != 0)
     {memset(kf->u_data, 0, sizeof_float * uSize);}	
@@ -306,7 +306,7 @@ void Kalman_Filter_Reset(KalmanFilter_t *kf, uint8_t xhatSize, uint8_t uSize, ui
     memset(kf->F_data, 0, sizeof_float * xhatSize * xhatSize);
     memset(kf->FT_data, 0, sizeof_float * xhatSize * xhatSize);	
 	
-	if(uSize != 0)
+    if(uSize != 0)
     {memset(kf->B_data, 0, sizeof_float * xhatSize * uSize);}
 	
     memset(kf->H_data, 0, sizeof_float * zSize * xhatSize);

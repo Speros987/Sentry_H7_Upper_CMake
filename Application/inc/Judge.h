@@ -484,14 +484,11 @@ uint16_t JUDGE_GetHeatLimit(void);
 uint16_t JUDGE_GetShootSpeedLimit(void);
 uint16_t JUDGE_GetPowerBuffer(void);
 int16_t JUDGE_GetRemainHeat(void);
-uint16_t JUDGE_GetRemain_42_Num(void);
 uint8_t HP_deduction_reason(void);
 uint16_t JUDGE_GetHP(void);
 uint16_t JUDGE_GetCoolingValue(void);
 
 
-//串口6中断回调
-void USER_USART1_IRQHandler(void);
 //任务回调
 void Task_Judge_Callback(void);
 //掉线回调
