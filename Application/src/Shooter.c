@@ -198,7 +198,7 @@ void Task_Shooter_Callback()
 			{
 				if(shooter.triggerMotor.targetAngle-shooter.triggerMotor.totalAngle<MOTOR_M3508_DGR2CODE(9))
 				{
-					shooter.triggerMotor.targetAngle+=MOTOR_M3508_DGR2CODE(360*1/9.0*1);  //每次转动1/9圈
+					shooter.triggerMotor.targetAngle+=MOTOR_M3508_DGR2CODE(360*1/9.0*2);  //每次转动1/9圈
 					shooter.workState=IDLE;    
 					shooter.number +=1;       
 					osDelay(t);	
@@ -217,7 +217,7 @@ void Task_Shooter_Callback()
 			{ 
 				if(shooter.triggerMotor.targetAngle-shooter.triggerMotor.totalAngle<MOTOR_M3508_DGR2CODE(9))
 				{
-					shooter.triggerMotor.targetAngle+=MOTOR_M3508_DGR2CODE(360*1/9.0*1);  //每次转动1/9圈
+					shooter.triggerMotor.targetAngle+=MOTOR_M3508_DGR2CODE(360*1/9.0*2);  //每次转动1/9圈
 					shooter.workState=IDLE;    
 					shooter.number +=1;  
 					osDelay(t);						

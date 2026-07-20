@@ -5,6 +5,7 @@
 #include "chassis.h"
 #include "shooter.h"
 #include "arm_math.h"
+#include <stdbool.h>
 
 #define DEG_TO_RAD 0.01745329f  // PI / 180
 #define TOP_YAW_LIMIT 45.0f
@@ -91,7 +92,7 @@ void Gimbal_UpdataAngle()
 	}
 	gimbal.top_yaw.lastAngle = gimbal.top_yaw.angle;
 	gimbal.base_yaw.totalAngle = gimbal.top_yaw.totalAngle - (gimbal.top_yawMotor.angle - TOP_YAW_OFFSET) / 8192.0 * 360.0;
-	
+
 	int flag = 1;  //大yaw给阶跃 可用于加蛋
 	if(chassis.pattern == Chassis_AI)
 	{
@@ -112,42 +113,66 @@ float yaw_speed = 60.0f;     // 扫描速度（度/秒）
 // 扫描参数配置
 float pitch_phase = 0.0f;       // 相位
 float pitch_freq = 1.0f;        // 频率 Hz
-float pitch_amp = 10.0f;        // 振幅 (5 - (-15)) / 2 = 10
-float pitch_offset = -5.0f;     // 中心角 (-15 + 5) / 2 = -5
+float pitch_amp = 15.0f;        // 振幅 
+float pitch_offset = 0.0f;     // 中心角 (-15 + 5) / 2 = -5
 
 
 void Gimbal_Scan_Update(void)
 {
     static float last_ideal_pitch = 0.0f;
     static uint8_t scan_init_flag = 1; // 首次进入扫描模式的标志位
+  	static uint32_t rotate_tick = 0;
 
-    // 纯累加，dt = 1ms
-    float yaw_delta = yaw_speed * 0.001f;
-    gimbal.top_yaw.targetAngle += yaw_delta;
-    gimbal.base_yaw.targetAngle = gimbal.top_yaw.targetAngle;
+	if (vision_receive.armor_mode == 1 && !vision.tracking) 
+	{
+    gimbal.pitch.targetAngle = 14.46f;
+		if(HAL_GetTick() - rotate_tick >= 1000)
+		{
+			gimbal.top_yaw.targetAngle += vision_receive.outpost_yaw;
+			gimbal.base_yaw.targetAngle = gimbal.top_yaw.targetAngle;
+			rotate_tick = HAL_GetTick();
+		}
+	}
+	else if (vision_receive.armor_mode == 2 && !vision.tracking) 
+	{
+    gimbal.pitch.targetAngle = 21.80f;
+		if(HAL_GetTick() - rotate_tick >= 1000)	
+		{
+			gimbal.top_yaw.targetAngle += vision_receive.rune_yaw;
+			gimbal.base_yaw.targetAngle = gimbal.top_yaw.targetAngle;
+			rotate_tick = HAL_GetTick();
+		}
+	}
+	else 
+	{
+    if(vision_receive.align_mode == 0)
+    {
+      // 纯累加，dt = 1ms
+      float yaw_delta = yaw_speed * 0.001f;
+      gimbal.top_yaw.targetAngle += yaw_delta;
+      gimbal.base_yaw.targetAngle = gimbal.top_yaw.targetAngle;
 
-    pitch_phase += 2.0f * PI * pitch_freq * 0.001f;
-    if (pitch_phase > 2.0f * PI) {
+      pitch_phase += 2.0f * PI * pitch_freq * 0.001f;
+      if (pitch_phase > 2.0f * PI) {
         pitch_phase -= 2.0f * PI;
-    }
+      }
 
-    float current_ideal_pitch = pitch_amp * arm_sin_f32(pitch_phase) + pitch_offset;
+      float current_ideal_pitch = pitch_amp * arm_sin_f32(pitch_phase) + pitch_offset;
 
-    if (scan_init_flag) {
+      if (scan_init_flag) {
         last_ideal_pitch = current_ideal_pitch;
         scan_init_flag = 0;
+      }
+      float pitch_wave_delta = current_ideal_pitch - last_ideal_pitch;
+
+      float error = current_ideal_pitch - gimbal.pitch.targetAngle;
+      float convergence_step = error * 0.02f; 
+
+      gimbal.pitch.targetAngle += pitch_wave_delta + convergence_step;
+
+      last_ideal_pitch = current_ideal_pitch;
     }
-    float pitch_wave_delta = current_ideal_pitch - last_ideal_pitch;
-
-    float error = current_ideal_pitch - gimbal.pitch.targetAngle;
-    float convergence_step = error * 0.02f; 
-
-    gimbal.pitch.targetAngle += pitch_wave_delta + convergence_step;
-
-    last_ideal_pitch = current_ideal_pitch;
-	// if (vision_receive.armor_mode == 1) {
-	// 	gimbal.top_yaw.targetAngle = 
-	// }
+	}
 }
 
 void Gimbal_VisionCtrl()
@@ -320,7 +345,7 @@ void Task_Gimbal_Callback()
 //		DEPID_CascadeCalc(&gimbal.pitch.imuPID, gimbal.pitch.targetAngle, gimbal.pitch.angle, gimbal.pitch.gyro);
    		PID_SingleCalc(&gimbal.pitch.imuPID.outer,gimbal.pitch.targetAngle,gimbal.pitch.angle);
 		gimbal.pitch.imuPID.output = - gimbal.pitch.imuPID.output/1000.0f  - PITCH_MASS * MASS_G * PITCH_R * arm_cos_f32(gimbal.pitch.angle * PI / 180.0f); ////输出除一千让PID参数乘1000方便调参
-		Gimbal_Follow_IMU();
+//		Gimbal_Follow_IMU();
 } //-MASS * G * R * arm_cos_f32(gimbal.pitch.angle * PI / 180.0f)
 
 	

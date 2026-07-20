@@ -28,7 +28,6 @@ void Task_CANMotors_Callback()
 		USER_CAN_SetMotorCurrent(&hfdcan2,0x1FF,gimbal.top_yaw.imuPID.output,0,0,0);
 }
 
-
 void Task_ClearError_Callback()
 {
   Motor_ClearErr(&hfdcan2,0x01,gimbal.pitchMotor.para.state);
@@ -40,7 +39,7 @@ void OS_MotorCallback(void const * argument)
     enable_motor_mode(&hfdcan2, 0x01, MIT_MODE);
     for (;;)
     {
-		Task_CANMotors_Callback();
+        Task_CANMotors_Callback();
         Task_ClearError_Callback();
         osDelay(1);  // 1ms循环
     }

@@ -51,7 +51,7 @@ typedef struct __attribute__((packed))
 {
 	uint8_t header;
 	uint8_t detect_color;  // 0-red 1-blue
-	uint8_t mode;  //0为打装甲板 1为打符
+	uint8_t mode;  //0为打车 1为打前哨 2为打符
 	
 	float roll;
 	float pitch;
@@ -101,7 +101,7 @@ typedef struct __attribute__((packed))
 	uint8_t spin_mode;  //0为小陀螺关  1为小陀螺开
 	uint8_t sentry_mode; //1为进攻 2为防守 3为移动 默认为3
 	uint8_t armor_mode;  //0为打车 1打前哨 2为打符
-	uint8_t align_mode;  //是否对齐 0为不对齐 1为对齐装甲板
+	uint8_t align_mode;  //是否对齐 0为不对齐 1为对齐起伏路段
 	uint8_t energy_activation; //0为不激活 1为激活小符 2为激活大符 激活小还是大和比赛开始时间有关
 	uint8_t buy_life; 	//0为不买活 1为买活
 	uint8_t remote_buy_blood;	//0到1为远程买一次血 1到2为买一次 依此类推 

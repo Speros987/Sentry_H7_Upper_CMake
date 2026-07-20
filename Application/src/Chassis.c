@@ -38,10 +38,10 @@ void Chassis_Init()
 		chassis.rotate.InitAngle -= 360;
 	chassis.rotate.InitpitchAngle = 1290; 
 
-	chassis.motors[0].TurnOffset= -304.57 - 30; //
-	chassis.motors[1].TurnOffset= -44.78 + 30;//
-	chassis.motors[2].TurnOffset= -119.49 + 30;//  //此处校准舵电机 正常加减30°的倍数
-	chassis.motors[3].TurnOffset= -6.5 + 90 + 180;//
+	chassis.motors[0].TurnOffset= -304.57 - 30 + 180; //
+	chassis.motors[1].TurnOffset= -44.78 + 30 + 45 + 180;//
+	chassis.motors[2].TurnOffset= -119.49 + 30 + 90 + 15 + 180;//  //此处校准舵电机 正常加减30°的倍数
+	chassis.motors[3].TurnOffset= -6.5 + 90 - 15 + 180;//
 
 	// 斜坡函数初始化
 	Slope_Init(&chassis.move.xSlope, 40, 0);

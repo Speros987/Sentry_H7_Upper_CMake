@@ -53,7 +53,7 @@ void Vision_DataUpdate(void)
 {	
 	vision_transmit.header = 0x5A;
 	vision_transmit.detect_color = !USER_JudgeData.self_color; // 打红0 打蓝1
-	vision_transmit.mode = 0; //0为打装甲板 1为打符
+	vision_transmit.mode = vision_receive.armor_mode; //0为打车 1为打前哨 2为打符
 	vision_transmit.top_yaw = gimbal.top_yaw.totalAngle;
 	vision_transmit.pitch = INS.pitch;
 	vision_transmit.roll = INS.roll;
