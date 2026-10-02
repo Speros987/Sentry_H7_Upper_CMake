@@ -36,6 +36,7 @@
 #include "bsp_dwt.h"
 #include "Judge.h"
 #include "USER_RC.h"
+#include "vision.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -121,6 +122,8 @@ int main(void)
 	Beep_Init();
 	B2B_Init();
 	Detect_InitAll();
+
+  Vision_Init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

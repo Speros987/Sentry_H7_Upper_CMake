@@ -46,6 +46,7 @@ typedef struct __attribute__((packed))
 	uint16_t ally_outpost_hp;  // 己方前哨站血量
 	uint16_t ally_base_hp;     // 己方基地血量
 }Judge_Data_e;
+
 //能否能打符  当前姿态  是否能买活 买活花多少钱
 typedef struct __attribute__((packed))
 {
@@ -54,13 +55,12 @@ typedef struct __attribute__((packed))
 	uint8_t mode;  //0为打车 1为打前哨 2为打符
 	
 	float roll;
-	float pitch;
+	float pitch;// INS.pitch
 	float top_yaw;
 	float diff_yaw;//大小yaw之间相差角度
-  	float diff_pitch;//大小yaw之间pitch差值
+  	float diff_pitch;// pitch电机位置角 rad
 	float bullet_speed;
 	uint8_t robo_status; //敌方机器人死没死
-	
 
 	Judge_Data_e AI_Judge_data;
 	uint8_t see_enemy; //0表示没瞄到 1表示瞄到装甲板 2表示瞄到符

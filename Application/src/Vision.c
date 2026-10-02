@@ -27,11 +27,13 @@ void Vision_DataReceive(uint8_t *read_from_usart, uint32_t length)
 	if (read_from_usart == NULL)
 		return;
 	// 查找帧头
-	while (length) {
-		if (*read_from_usart != VISION_FRAME_HEADER_RX) {
+	while (length) 
+	{
+		if (*read_from_usart != VISION_FRAME_HEADER_RX) 
+		{
 			++read_from_usart;
 			--length;
-		} 
+		}
 		else
 		{
 			break;
@@ -150,7 +152,7 @@ void Vision_DataTransmit(void)
 
 void OS_VisionCallback(void const * argument)
 {
-	Vision_Init();
+	
 
 	for(;;)
 	{

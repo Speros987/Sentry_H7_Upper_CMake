@@ -3,10 +3,10 @@
 
 #include "stdint.h"
 
-//¾ùÖµÂË²¨Æ÷×î´óÔÊĞíµÄ»º³åÇø³¤¶È
+//å‡å€¼æ»¤æ³¢å™¨æœ€å¤§å…è®¸çš„ç¼“å†²åŒºé•¿åº¦
 #define AVER_FILTER_MAX_SIZE 100
 
-//¾ùÖµÂË²¨Æ÷
+//å‡å€¼æ»¤æ³¢å™¨
 typedef struct
 {
 	float buffer[AVER_FILTER_MAX_SIZE];
@@ -16,11 +16,11 @@ typedef struct
 
 typedef struct 
 {
-    float P; //¹ÀËãĞ­·½²î
-    float G; //¿¨¶ûÂüÔöÒæ
-    float Q; //¹ı³ÌÔëÉùĞ­·½²î,QÔö´ó£¬¶¯Ì¬ÏìÓ¦±ä¿ì£¬ÊÕÁ²ÎÈ¶¨ĞÔ±ä»µ
-    float R; //²âÁ¿ÔëÉùĞ­·½²î,RÔö´ó£¬¶¯Ì¬ÏìÓ¦±äÂı£¬ÊÕÁ²ÎÈ¶¨ĞÔ±äºÃ
-    float Output; //¿¨¶ûÂüÂË²¨Æ÷Êä³ö 
+    float P; //ä¼°ç®—åæ–¹å·®
+    float G; //å¡å°”æ›¼å¢ç›Š
+    float Q; //è¿‡ç¨‹å™ªå£°åæ–¹å·®,Qå¢å¤§ï¼ŒåŠ¨æ€å“åº”å˜å¿«ï¼Œæ”¶æ•›ç¨³å®šæ€§å˜å
+    float R; //æµ‹é‡å™ªå£°åæ–¹å·®,Rå¢å¤§ï¼ŒåŠ¨æ€å“åº”å˜æ…¢ï¼Œæ”¶æ•›ç¨³å®šæ€§å˜å¥½
+    float Output; //å¡å°”æ›¼æ»¤æ³¢å™¨è¾“å‡º 
 }KFPTypeS;
 
 void Filter_InitAverFilter(AverFilter *filter,uint16_t size);

@@ -7,7 +7,7 @@ typedef struct _SMC
 	double sys;
 }SMC;
 
-// º¯ÊýÉùÃ÷
+// å‡½æ•°å£°æ˜Ž
 void SMCInit(SMC *smc,double A,double B,double k,double f,double disturb);
 void SMC_Calc(SMC*smc,double reference,double feedback);
 #endif 

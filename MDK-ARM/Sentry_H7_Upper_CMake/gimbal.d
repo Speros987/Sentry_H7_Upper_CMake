@@ -7,17 +7,8 @@ sentry_h7_upper_cmake/gimbal.o: ..\Application\src\Gimbal.c \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h \
   ..\Drivers\CMSIS\Include\core_cm7.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\stdint.h \
-  ..\Drivers\CMSIS\Include\cmsis_version.h \
-  ..\Drivers\CMSIS\Include\cmsis_compiler.h \
-  ..\Drivers\CMSIS\Include\cmsis_armclang.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\arm_compat.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\arm_acle.h \
-  ..\Drivers\CMSIS\Include\mpu_armv7.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\system_stm32h7xx.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\stddef.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\math.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rcc_ex.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_gpio.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_gpio_ex.h \
@@ -58,33 +49,30 @@ sentry_h7_upper_cmake/gimbal.o: ..\Application\src\Gimbal.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\math\inc\PID.h ..\math\inc\SMC.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\stdbool.h \
-  ..\math\inc\slope.h ..\math\inc\Filter.h ..\IMU\inc\imu_temp_ctrl.h \
+  ..\math\inc\PID.h ..\math\inc\SMC.h ..\math\inc\slope.h \
+  ..\math\inc\Filter.h ..\IMU\inc\imu_temp_ctrl.h \
   ..\UserMiddlewares\inc\USER_RC.h ..\Core\Inc\usart.h \
   ..\Application\inc\vision.h ..\Application\inc\chassis.h \
   ..\Application\inc\shooter.h ..\Application\inc\Moto.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\arm_math.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\arm_math_types.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\string.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\float.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\limits.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\arm_math_memory.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\none.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\utils.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\basic_math_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\interpolation_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\bayes_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\statistics_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\fast_math_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\matrix_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\complex_math_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\controller_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\support_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\distance_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\svm_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\svm_defines.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\transform_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\filtering_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\quaternion_math_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\window_functions.h
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math_types.h \
+  ..\Drivers\CMSIS\Include\cmsis_compiler.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math_memory.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\none.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\utils.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\basic_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\interpolation_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\bayes_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\statistics_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\fast_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\matrix_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\complex_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\controller_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\support_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\distance_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\svm_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\svm_defines.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\transform_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\filtering_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\quaternion_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\window_functions.h

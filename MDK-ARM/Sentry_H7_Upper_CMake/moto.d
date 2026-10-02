@@ -1,7 +1,6 @@
 sentry_h7_upper_cmake/moto.o: ..\Application\src\Moto.c \
-  ..\Application\inc\Moto.h ..\math\inc\PID.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\stdint.h \
-  ..\BSP\inc\bsp_can.h ..\Core\Inc\fdcan.h ..\Core\Inc\main.h \
+  ..\Application\inc\Moto.h ..\math\inc\PID.h ..\BSP\inc\bsp_can.h \
+  ..\Core\Inc\fdcan.h ..\Core\Inc\main.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h \
   ..\Core\Inc\stm32h7xx_hal_conf.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rcc.h \
@@ -9,16 +8,8 @@ sentry_h7_upper_cmake/moto.o: ..\Application\src\Moto.c \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h \
   ..\Drivers\CMSIS\Include\core_cm7.h \
-  ..\Drivers\CMSIS\Include\cmsis_version.h \
-  ..\Drivers\CMSIS\Include\cmsis_compiler.h \
-  ..\Drivers\CMSIS\Include\cmsis_armclang.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\arm_compat.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\arm_acle.h \
-  ..\Drivers\CMSIS\Include\mpu_armv7.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\system_stm32h7xx.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\stddef.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\math.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rcc_ex.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_gpio.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_gpio_ex.h \
@@ -59,7 +50,6 @@ sentry_h7_upper_cmake/moto.o: ..\Application\src\Moto.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
   ..\UserMiddlewares\inc\USER_Moto.h ..\math\inc\SMC.h \
-  ..\Application\inc\shooter.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\stdbool.h \
-  ..\math\inc\Slope.h ..\Application\inc\gimbal.h ..\math\inc\Filter.h \
+  ..\Application\inc\shooter.h ..\math\inc\Slope.h \
+  ..\Application\inc\gimbal.h ..\math\inc\Filter.h \
   ..\Application\inc\judge.h

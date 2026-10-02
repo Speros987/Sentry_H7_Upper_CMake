@@ -3,11 +3,11 @@
 
 typedef struct
 {
-    float q[4]; // ËÄÔªÊı¹À¼ÆÖµ
-    float gyro[3];  // ½ÇËÙ¶È
-    float accel[3]; // ¼ÓËÙ¶È
-		float temp;			// ÎÂ¶È
-    // Î»×Ë
+    float q[4]; // å››å…ƒæ•°ä¼°è®¡å€¼
+    float gyro[3];  // è§’é€Ÿåº¦
+    float accel[3]; // åŠ é€Ÿåº¦
+		float temp;			// æ¸©åº¦
+    // ä½å§¿
     float roll;
     float pitch;
     float yaw;

@@ -9,20 +9,20 @@
 
 #define EMPTY_QUEUE {NULL,0,0,0,NULL,0}
 
-/*************Êı¾İ½á¹¹**************/
-//¶ÓÁĞ½á¹¹Ìå
+/*************æ•°æ®ç»“æ„**************/
+//é˜Ÿåˆ—ç»“æ„ä½“
 typedef struct _Queue
 {
-	//¶ÓÁĞÊı¾İ
-	void **data;//Ö»±£´æÖ¸Õë£¬ÈôÒªÍ¬Ê±±£´æÖ¸ÏòµÄÊı¾İÇë¸½¼Ó±£´æÇø
+	//é˜Ÿåˆ—æ•°æ®
+	void **data;//åªä¿å­˜æŒ‡é’ˆï¼Œè‹¥è¦åŒæ—¶ä¿å­˜æŒ‡å‘çš„æ•°æ®è¯·é™„åŠ ä¿å­˜åŒº
 	uint16_t maxSize;
 	uint16_t front,rear;
-	//Êı¾İ±£´æÇø(¿ÉÑ¡ÓÃ)
+	//æ•°æ®ä¿å­˜åŒº(å¯é€‰ç”¨)
 	void *buffer;
-	uint8_t bufElemSize;//Ã¿¸öÔªËØµÄ´óĞ¡
+	uint8_t bufElemSize;//æ¯ä¸ªå…ƒç´ çš„å¤§å°
 }Queue;
 
-/**************½Ó¿Úº¯Êı***************/
+/**************æ¥å£å‡½æ•°***************/
 void Queue_Init(Queue *queue,uint16_t maxSize);
 void Queue_AttachBuffer(Queue *queue,void *buffer,uint8_t elemSize);
 void Queue_Destroy(Queue *queue);

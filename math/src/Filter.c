@@ -1,6 +1,6 @@
 #include "Filter.h"
 
-//³õÊ¼»¯¾ùÖµÂË²¨Æ÷
+//åˆå§‹åŒ–å‡å€¼æ»¤æ³¢å™¨
 void Filter_InitAverFilter(AverFilter *filter,uint16_t size)
 {
 	filter->bufferSize=size;
@@ -11,25 +11,25 @@ void Filter_InitAverFilter(AverFilter *filter,uint16_t size)
 	}
 }
 
-//¾ùÖµÂË²¨¼ÆËã
+//å‡å€¼æ»¤æ³¢è®¡ç®—
 float Filter_AverCalc(AverFilter *filter,float newVal)
 {
 	float sum=0;
 	
-	for(uint16_t i=0;i<filter->bufferSize-1;i++)//±éÀúÕû¸ö»º³åÇø
+	for(uint16_t i=0;i<filter->bufferSize-1;i++)//éå†æ•´ä¸ªç¼“å†²åŒº
 	{
-		filter->buffer[i]=filter->buffer[i+1];//ËùÓĞÊı¾İÇ°ÒÆÒ»Î»
-		sum+=filter->buffer[i];//ÇóºÍ
+		filter->buffer[i]=filter->buffer[i+1];//æ‰€æœ‰æ•°æ®å‰ç§»ä¸€ä½
+		sum+=filter->buffer[i];//æ±‚å’Œ
 	}
 	
-	filter->buffer[filter->bufferSize-1]=newVal;//Ğ´ÈëĞÂÊı¾İ
+	filter->buffer[filter->bufferSize-1]=newVal;//å†™å…¥æ–°æ•°æ®
 	
 	sum+=newVal;
 	
-	return sum/filter->bufferSize;//¼ÆËã¾ùÖµ
+	return sum/filter->bufferSize;//è®¡ç®—å‡å€¼
 }
 
-//Çå¿Õ¾ùÖµÂË²¨»º³åÇø
+//æ¸…ç©ºå‡å€¼æ»¤æ³¢ç¼“å†²åŒº
 void Filter_AverClear(AverFilter *filter)
 {
 	for(uint16_t i=0;i<filter->bufferSize;i++)
@@ -39,25 +39,25 @@ void Filter_AverClear(AverFilter *filter)
 }
 /**
   ******************************************************************************
-  * @brief  ¿¨¶ûÂüÂË²¨Æ÷ º¯Êı
-  * @param  *kfp    - ¿¨¶ûÂü½á¹¹Ìå²ÎÊı
-  * @param  input   - ĞèÒªÂË²¨µÄ²ÎÊıµÄ²âÁ¿Öµ£¨¼´´«¸ĞÆ÷µÄ²É¼¯Öµ£©
-  * @return ¿¨¶ûÂüÂË²¨Æ÷Êä³öÖµ£¨×îÓÅÖµ£©
+  * @brief  å¡å°”æ›¼æ»¤æ³¢å™¨ å‡½æ•°
+  * @param  *kfp    - å¡å°”æ›¼ç»“æ„ä½“å‚æ•°
+  * @param  input   - éœ€è¦æ»¤æ³¢çš„å‚æ•°çš„æµ‹é‡å€¼ï¼ˆå³ä¼ æ„Ÿå™¨çš„é‡‡é›†å€¼ï¼‰
+  * @return å¡å°”æ›¼æ»¤æ³¢å™¨è¾“å‡ºå€¼ï¼ˆæœ€ä¼˜å€¼ï¼‰
   * @note   
   ******************************************************************************
   */
 float KalmanFilter(KFPTypeS *kfp, float input)
 {
-    //¹ÀËãĞ­·½²î·½³Ì£ºµ±Ç° ¹ÀËãĞ­·½²î = ÉÏ´Î¸üĞÂ Ğ­·½²î + ¹ı³ÌÔëÉùĞ­·½²î
+    //ä¼°ç®—åæ–¹å·®æ–¹ç¨‹ï¼šå½“å‰ ä¼°ç®—åæ–¹å·® = ä¸Šæ¬¡æ›´æ–° åæ–¹å·® + è¿‡ç¨‹å™ªå£°åæ–¹å·®
     kfp->P = kfp->P + kfp->Q;
  
-    //¿¨¶ûÂüÔöÒæ·½³Ì£ºµ±Ç° ¿¨¶ûÂüÔöÒæ = µ±Ç° ¹ÀËãĞ­·½²î / £¨µ±Ç° ¹ÀËãĞ­·½²î + ²âÁ¿ÔëÉùĞ­·½²î£©
+    //å¡å°”æ›¼å¢ç›Šæ–¹ç¨‹ï¼šå½“å‰ å¡å°”æ›¼å¢ç›Š = å½“å‰ ä¼°ç®—åæ–¹å·® / ï¼ˆå½“å‰ ä¼°ç®—åæ–¹å·® + æµ‹é‡å™ªå£°åæ–¹å·®ï¼‰
     kfp->G = kfp->P / (kfp->P + kfp->R);
  
-    //¸üĞÂ×îÓÅÖµ·½³Ì£ºµ±Ç° ×îÓÅÖµ = µ±Ç° ¹ÀËãÖµ + ¿¨¶ûÂüÔöÒæ * £¨µ±Ç° ²âÁ¿Öµ - µ±Ç° ¹ÀËãÖµ£©
-    kfp->Output = kfp->Output + kfp->G * (input - kfp->Output); //µ±Ç° ¹ÀËãÖµ = ÉÏ´Î ×îÓÅÖµ
+    //æ›´æ–°æœ€ä¼˜å€¼æ–¹ç¨‹ï¼šå½“å‰ æœ€ä¼˜å€¼ = å½“å‰ ä¼°ç®—å€¼ + å¡å°”æ›¼å¢ç›Š * ï¼ˆå½“å‰ æµ‹é‡å€¼ - å½“å‰ ä¼°ç®—å€¼ï¼‰
+    kfp->Output = kfp->Output + kfp->G * (input - kfp->Output); //å½“å‰ ä¼°ç®—å€¼ = ä¸Šæ¬¡ æœ€ä¼˜å€¼
  
-    //¸üĞÂ Ğ­·½²î = £¨1 - ¿¨¶ûÂüÔöÒæ£© * µ±Ç° ¹ÀËãĞ­·½²î¡£
+    //æ›´æ–° åæ–¹å·® = ï¼ˆ1 - å¡å°”æ›¼å¢ç›Šï¼‰ * å½“å‰ ä¼°ç®—åæ–¹å·®ã€‚
     kfp->P = (1 - kfp->G) * kfp->P;
  
     return kfp->Output;

@@ -6,17 +6,8 @@ sentry_h7_upper_cmake/imu_temp_ctrl.o: ..\IMU\src\imu_temp_ctrl.c \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h \
   ..\Drivers\CMSIS\Include\core_cm7.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\stdint.h \
-  ..\Drivers\CMSIS\Include\cmsis_version.h \
-  ..\Drivers\CMSIS\Include\cmsis_compiler.h \
-  ..\Drivers\CMSIS\Include\cmsis_armclang.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\arm_compat.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\arm_acle.h \
-  ..\Drivers\CMSIS\Include\mpu_armv7.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\system_stm32h7xx.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\stddef.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\math.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rcc_ex.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_gpio.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_gpio_ex.h \
@@ -58,17 +49,14 @@ sentry_h7_upper_cmake/imu_temp_ctrl.o: ..\IMU\src\imu_temp_ctrl.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
   ..\IMU\BMI088\inc\BMI088driver.h ..\Core\Inc\gpio.h \
   ..\IMU\Algorithm\inc\kalman_filter.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\stdlib.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\matrix_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\arm_math_types.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\string.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\float.h \
-  D:\Program_Programing\MDK\Core\ARM\ARMCLANG\Bin\..\include\limits.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\arm_math_memory.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\none.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\utils.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\fast_math_functions.h \
-  D:\Program_Programing\MDK\Packs\ARM\CMSIS-DSP\1.16.2\Include\dsp\basic_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\matrix_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math_types.h \
+  ..\Drivers\CMSIS\Include\cmsis_compiler.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math_memory.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\none.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\utils.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\fast_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\basic_math_functions.h \
   ..\IMU\Algorithm\inc\QuaternionEKF.h ..\IMU\inc\imu_temp_ctrl.h \
   ..\IMU\Mahony\inc\MahonyAHRS.h ..\IMU\Algorithm\inc\controller.h \
   ..\IMU\Algorithm\inc\user_lib.h

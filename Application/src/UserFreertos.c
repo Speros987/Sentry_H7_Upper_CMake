@@ -11,10 +11,10 @@ extern DMA_HandleTypeDef hdma_usart2_rx;
 extern uint8_t usart2RxBuf[256];
 
 
-//閿欒澶勭悊(鎬ュ仠)浠诲姟 
+//错误处理(急停)任务 
 /*
- 鏃爋s_delay鏈€楂樹紭鍏堢骇 鍦ㄧ▼搴忔甯歌繍琛屾椂涓嶅簲璇ヨ璋冪敤 
- 鍦ㄦ仮澶嶆墽琛屾椂鍗犳嵁鍏ㄩ儴鏃堕棿鐗囬タ姝诲叾浠栦换鍔?
+ 无os_delay最高优先级 在程序正常运行时不应该被调用 
+ 在恢复执行时占据全部时间片饿死其他任务
 */
 		
 void OS_ErrorCallback(void const * argument)
