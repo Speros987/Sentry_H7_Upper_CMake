@@ -9,12 +9,12 @@
 
 enum
 {
-	IDLE = 0,
-	TRIGGER,
-	TRIGGER_REVERSE,
-	TRIGGER_CONTINUE,
-	TRIGGER_DOUBLE,
-	TRIGGER_CLICK,
+	IDLE = 0,			//空闲，不拨弹
+	TRIGGER,			//单次拨弹
+	TRIGGER_REVERSE,	//堵转后反转拨弹机构
+	TRIGGER_CONTINUE,	//连续拨弹
+	TRIGGER_DOUBLE,		//双发拨弹，当前代码中基本未使用
+	TRIGGER_CLICK,		//点射一发
 };
 
 typedef struct

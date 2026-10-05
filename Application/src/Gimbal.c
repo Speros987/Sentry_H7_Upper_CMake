@@ -12,7 +12,7 @@
 #define BASE_YAW_J 0.04575f
 
 Gimbal_t gimbal;
-float visionFindAver;
+// float visionFindAver;
 float p_target;
 
 void Gimbal_InitPID(void);
@@ -61,14 +61,19 @@ void Gimbal_InitPID()
 //
 }
 
+// 大小yaw、pitch目标角度计算
 void Gimbal_UpdataAngle()
 {
+	// region 传感器数据传递
 	gimbal.top_yaw.gyro = INS.gyro[2];
 	gimbal.top_yaw.angle = INS.yaw;
 	gimbal.base_yaw.angle = gimbal.top_yaw.angle - (gimbal.top_yawMotor.angle - TOP_YAW_OFFSET) / 8192.0 * 360.0; //得出大yaw的imu角度
 	// gimbal.base_yaw.gyro = -gimbal.base_yawMotor.para.vel;   //加负号因为电机倒置 暂时不用 上下板通信不够用 
 	gimbal.pitch.gyro = -INS.gyro[0];
 	gimbal.pitch.angle = INS.pitch;
+	// endregion
+
+	// region yaw相关角度计算
 	float dAngle = 0;
 	if (gimbal.top_yaw.angle - gimbal.top_yaw.lastAngle < -270)
 		dAngle = gimbal.top_yaw.angle + (360 - gimbal.top_yaw.lastAngle);
@@ -78,7 +83,7 @@ void Gimbal_UpdataAngle()
 		dAngle = gimbal.top_yaw.angle - gimbal.top_yaw.lastAngle;
 	gimbal.top_yaw.totalAngle += dAngle;
 
-	// target += round((total - target) / 360.0) * 360.0;
+	// target超出total过半圈时修正
 	while (gimbal.top_yaw.targetAngle - gimbal.top_yaw.totalAngle >= 180 || gimbal.top_yaw.totalAngle - gimbal.top_yaw.targetAngle >= 180)
 	{
 		if (gimbal.top_yaw.targetAngle - gimbal.top_yaw.totalAngle >= 180)
@@ -92,15 +97,18 @@ void Gimbal_UpdataAngle()
 	}
 	gimbal.top_yaw.lastAngle = gimbal.top_yaw.angle;
 	gimbal.base_yaw.totalAngle = gimbal.top_yaw.totalAngle - (gimbal.top_yawMotor.angle - TOP_YAW_OFFSET) / 8192.0 * 360.0;
+	// endregion
 
 	int flag = 1;  //大yaw给阶跃 可用于加蛋
 	if(chassis.pattern == Chassis_AI)
 	{
-		if(rcInfo.left == 2 && flag == 1){
+		if(rcInfo.left == 2 && flag == 1)
+		{
 			gimbal.base_yaw.targetAngle += 45;
 			flag = 0;
 		}
-		if(rcInfo.left == 3 && flag == 0){
+		if(rcInfo.left == 3 && flag == 0)
+		{
 			gimbal.base_yaw.targetAngle -= 45;
 			flag = 1;
 		}
@@ -123,9 +131,9 @@ void Gimbal_Scan_Update(void)
     static uint8_t scan_init_flag = 1; // 首次进入扫描模式的标志位
   	static uint32_t rotate_tick = 0;
 
-	if (vision_receive.armor_mode == 1 && !vision.tracking) 
+	if (vision_receive.armor_mode == 1 && !vision.tracking)
 	{
-    gimbal.pitch.targetAngle = 14.46f;
+    	gimbal.pitch.targetAngle = 14.46f; // 前哨的高度
 		if(HAL_GetTick() - rotate_tick >= 1000)
 		{
 			gimbal.top_yaw.targetAngle += vision_receive.outpost_yaw;
@@ -133,10 +141,10 @@ void Gimbal_Scan_Update(void)
 			rotate_tick = HAL_GetTick();
 		}
 	}
-	else if (vision_receive.armor_mode == 2 && !vision.tracking) 
+	else if (vision_receive.armor_mode == 2 && !vision.tracking)
 	{
-    gimbal.pitch.targetAngle = 21.80f;
-		if(HAL_GetTick() - rotate_tick >= 1000)	
+    	gimbal.pitch.targetAngle = 21.80f; // 符文的高度
+		if(HAL_GetTick() - rotate_tick >= 1000)
 		{
 			gimbal.top_yaw.targetAngle += vision_receive.rune_yaw;
 			gimbal.base_yaw.targetAngle = gimbal.top_yaw.targetAngle;
@@ -145,33 +153,35 @@ void Gimbal_Scan_Update(void)
 	}
 	else 
 	{
-    if(vision_receive.align_mode == 0)
-    {
-      // 纯累加，dt = 1ms
-      float yaw_delta = yaw_speed * 0.001f;
-      gimbal.top_yaw.targetAngle += yaw_delta;
-      gimbal.base_yaw.targetAngle = gimbal.top_yaw.targetAngle;
+		if(vision_receive.align_mode == 0)
+		{
+			// 纯累加，dt = 1ms
+			float yaw_delta = yaw_speed * 0.001f;
+			gimbal.top_yaw.targetAngle += yaw_delta;
+			gimbal.base_yaw.targetAngle = gimbal.top_yaw.targetAngle;
 
-      pitch_phase += 2.0f * PI * pitch_freq * 0.001f;
-      if (pitch_phase > 2.0f * PI) {
-        pitch_phase -= 2.0f * PI;
-      }
+			pitch_phase += 2.0f * PI * pitch_freq * 0.001f;
+			if (pitch_phase > 2.0f * PI) 
+			{
+				pitch_phase -= 2.0f * PI;
+			}
 
-      float current_ideal_pitch = pitch_amp * arm_sin_f32(pitch_phase) + pitch_offset;
+			float current_ideal_pitch = pitch_amp * arm_sin_f32(pitch_phase) + pitch_offset;
 
-      if (scan_init_flag) {
-        last_ideal_pitch = current_ideal_pitch;
-        scan_init_flag = 0;
-      }
-      float pitch_wave_delta = current_ideal_pitch - last_ideal_pitch;
+			if (scan_init_flag) 
+			{
+				last_ideal_pitch = current_ideal_pitch;
+				scan_init_flag = 0;
+			}
+			float pitch_wave_delta = current_ideal_pitch - last_ideal_pitch;
 
-      float error = current_ideal_pitch - gimbal.pitch.targetAngle;
-      float convergence_step = error * 0.02f; 
+			float error = current_ideal_pitch - gimbal.pitch.targetAngle;
+			float convergence_step = error * 0.02f; 
 
-      gimbal.pitch.targetAngle += pitch_wave_delta + convergence_step;
+			gimbal.pitch.targetAngle += pitch_wave_delta + convergence_step;
 
-      last_ideal_pitch = current_ideal_pitch;
-    }
+			last_ideal_pitch = current_ideal_pitch;
+		}
 	}
 }
 
@@ -214,6 +224,7 @@ void Gimbal_VisionCtrl()
 	LIMIT(gimbal.pitch.targetAngle,gimbal.pitch.pitchMin,gimbal.pitch.pitchMax); 
 }
 
+// 视觉控制下的大小yaw和pitch的目标角度
 void Gimbal_VisionCtrl_Limit()
 {
     float target_top  = vision.top_yaw;
@@ -224,15 +235,15 @@ void Gimbal_VisionCtrl_Limit()
         base_cycle = (gimbal.base_yaw.targetAngle / 360.f) + 0.5f;
     else
         base_cycle = (gimbal.base_yaw.targetAngle / 360.f) - 0.5f;
-    float base_target_unwrap = base_cycle * 360.f + target_base;//找圈数
+    float base_target_unwrap = base_cycle * 360.f + target_base;//圈数+目标角度
 
     gimbal.base_yaw.targetAngle = base_target_unwrap;// 大yaw直接瞄就行
 
     float top_target_unwrap = base_target_unwrap + (target_top - target_base);
 
-    float delta = top_target_unwrap - gimbal.base_yaw.totalAngle;//计算相对误差
+    float delta = top_target_unwrap - gimbal.base_yaw.totalAngle;// 计算相对误差
 
-    float delta_limit = delta;//限幅
+    float delta_limit = delta;// 限幅
     if(delta > TOP_YAW_LIMIT)       delta_limit = TOP_YAW_LIMIT;
     else if(delta < -TOP_YAW_LIMIT) delta_limit = -TOP_YAW_LIMIT;
 
@@ -277,74 +288,82 @@ void Gimbal_Follow_IMU(void)
 
 void Task_Gimbal_Callback()
 {
-		visionFindAver=Filter_AverCalc(&gimbal.visionFilter.find,vision.tracking);
-		if(chassis.pattern == Chassis_control)
-		{
-			if(rcInfo.wheel<-400)
-				gimbal.visionEnable=true;
-			else
-				gimbal.visionEnable=false;
-			if(gimbal.visionEnable && vision.tracking)
-			{
-				Gimbal_VisionCtrl();
-			}
-			else	
-				Gimbal_RockerCtrl();	 
-		}
+	// visionFindAver=Filter_AverCalc(&gimbal.visionFilter.find,vision.tracking);
+	
+// region 非AI控制
+	if(chassis.pattern == Chassis_control)
+	{
+		if(rcInfo.wheel<-400)
+			gimbal.visionEnable=true;
+		else
+			gimbal.visionEnable=false;
+		
+		if(gimbal.visionEnable && vision.tracking)
+			Gimbal_VisionCtrl();
+		else
+			Gimbal_RockerCtrl();
+	}
+// endregion
+
     if(chassis.rotate.mode == ChassisMode_Spin)
-    {     
-      gimbal.base_yaw.imuPID.outer.maxIntegral = 6000;
-      gimbal.base_yaw.imuPID.outer.ki = 0.5;
+    {
+		gimbal.base_yaw.imuPID.outer.maxIntegral = 6000;
+		gimbal.base_yaw.imuPID.outer.ki = 0.5;
     }
     else 
     {
-      gimbal.base_yaw.imuPID.outer.maxIntegral = 1000;
-      gimbal.base_yaw.imuPID.outer.ki = 0.1;
+		gimbal.base_yaw.imuPID.outer.maxIntegral = 1000;
+		gimbal.base_yaw.imuPID.outer.ki = 0.1;
     }
+
+// region AI控制
+	if(chassis.pattern==Chassis_AI)
+	{
+		gimbal.visionEnable=true;// 强制保持视觉控云台
+
+		// 是否开扫描
+		if(rcInfo.left==1)
+			gimbal.scan_flag=true;
+		else
+			gimbal.scan_flag=false;
 		
-		if(chassis.pattern==Chassis_AI)
+		if(gimbal.scan_flag)
 		{
-			gimbal.visionEnable=true;
-			if(rcInfo.left==1)
-				gimbal.scan_flag=true;
-			else
-				gimbal.scan_flag=false;
-			if(gimbal.scan_flag)
+			if(gimbal.visionEnable && vision.tracking)
 			{
-				if(gimbal.visionEnable && vision.tracking)
-				{
-					shooter.fricOpenFlag = 1;
-					Shooter_state(shooter.fricOpenFlag);
-					//Gimbal_VisionCtrl();
-					Gimbal_VisionCtrl_Limit();
-				}
-				else
-				{
-					shooter.fricOpenFlag = 0;
-					Gimbal_Scan_Update();
-				}
+				shooter.fricOpenFlag = 1;
+				Shooter_state(shooter.fricOpenFlag);
+				//Gimbal_VisionCtrl();
+				Gimbal_VisionCtrl_Limit();
 			}
 			else
-				Gimbal_RockerCtrl();	
+			{
+				shooter.fricOpenFlag = 0;
+				Gimbal_Scan_Update();
+			}
 		}
-		
-		Gimbal_UpdataAngle();
-		
-		//计算小yaw电机输出
-		DEPID_CascadeCalc(&gimbal.top_yaw.imuPID,gimbal.top_yaw.targetAngle,gimbal.top_yaw.totalAngle,gimbal.top_yaw.gyro);
-		gimbal.top_yaw.imuPID.output = gimbal.top_yaw.imuPID.output;
-		
-		// 计算大yaw电机输出
-		// DEPID_CascadeCalc(&gimbal.base_yaw.imuPID, gimbal.base_yaw.targetAngle, gimbal.base_yaw.totalAngle, gimbal.base_yaw.gyro);
-		// gimbal.base_yaw.imuPID.output = -gimbal.base_yaw.imuPID.output/1000.0f - 2.0f * (gimbal.top_yaw.imuPID.output / 30000.0f) - forwardfeed(gimbal.base_yaw.imuPID.outer.output / 1000.0f);//因为电机倒置 所以输出反向 输出除一千让PID参数乘1000方便调参 再加入前馈
+		else
+			Gimbal_RockerCtrl();	
+	}
+// endregion
 
-		PID_SingleCalc(&gimbal.base_yaw.imuPID.outer,gimbal.base_yaw.targetAngle,gimbal.base_yaw.totalAngle);
-		gimbal.base_yaw.imuPID.outer.output = -gimbal.base_yaw.imuPID.outer.output / 1000.0f;
-		
-		// 计算pitch电机输出
+	Gimbal_UpdataAngle();
+	
+	//计算小yaw电机输出
+	DEPID_CascadeCalc(&gimbal.top_yaw.imuPID,gimbal.top_yaw.targetAngle,gimbal.top_yaw.totalAngle,gimbal.top_yaw.gyro);
+	gimbal.top_yaw.imuPID.output = gimbal.top_yaw.imuPID.output;
+	
+	// 计算大yaw电机输出
+	// DEPID_CascadeCalc(&gimbal.base_yaw.imuPID, gimbal.base_yaw.targetAngle, gimbal.base_yaw.totalAngle, gimbal.base_yaw.gyro);
+	// gimbal.base_yaw.imuPID.output = -gimbal.base_yaw.imuPID.output/1000.0f - 2.0f * (gimbal.top_yaw.imuPID.output / 30000.0f) - forwardfeed(gimbal.base_yaw.imuPID.outer.output / 1000.0f);//因为电机倒置 所以输出反向 输出除一千让PID参数乘1000方便调参 再加入前馈
+
+	PID_SingleCalc(&gimbal.base_yaw.imuPID.outer,gimbal.base_yaw.targetAngle,gimbal.base_yaw.totalAngle);
+	gimbal.base_yaw.imuPID.outer.output = -gimbal.base_yaw.imuPID.outer.output / 1000.0f;
+	
+	// 计算pitch电机输出
 //		DEPID_CascadeCalc(&gimbal.pitch.imuPID, gimbal.pitch.targetAngle, gimbal.pitch.angle, gimbal.pitch.gyro);
-   		PID_SingleCalc(&gimbal.pitch.imuPID.outer,gimbal.pitch.targetAngle,gimbal.pitch.angle);
-		gimbal.pitch.imuPID.output = - gimbal.pitch.imuPID.output/1000.0f  - PITCH_MASS * MASS_G * PITCH_R * arm_cos_f32(gimbal.pitch.angle * PI / 180.0f); ////输出除一千让PID参数乘1000方便调参
+	PID_SingleCalc(&gimbal.pitch.imuPID.outer,gimbal.pitch.targetAngle,gimbal.pitch.angle);
+	gimbal.pitch.imuPID.output = - gimbal.pitch.imuPID.output/1000.0f  - PITCH_MASS * MASS_G * PITCH_R * arm_cos_f32(gimbal.pitch.angle * PI / 180.0f); ////输出除一千让PID参数乘1000方便调参
 //		Gimbal_Follow_IMU();
 } //-MASS * G * R * arm_cos_f32(gimbal.pitch.angle * PI / 180.0f)
 

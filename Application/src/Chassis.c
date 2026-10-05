@@ -144,8 +144,8 @@ void Chassis_ModeCtrl()
 	switch(rcInfo.right)
 		{
 			case 3:
-				 chassis.pattern = Chassis_AI;// 右拨杆下：AI自动模式（视觉接管）
-			break;
+				 chassis.pattern = Chassis_AI;// 右拨杆中：AI自动模式（视觉接管）
+				break;
 			case 1:
 				 chassis.pattern =Chassis_control;// 右拨杆上：手动遥控模式（此处无break，会落入default，无额外操作）
 			default:

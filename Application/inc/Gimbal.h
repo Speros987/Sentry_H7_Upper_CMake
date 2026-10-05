@@ -29,7 +29,13 @@ typedef struct
   struct
   {
     float initAngle;                                // yaw
-    float angle, lastAngle, totalAngle, totalRound; // 用于角度统计
+
+    // 用于角度统计
+    float angle;//单位：°
+    float lastAngle;//单位：°
+    float totalAngle;//单位：°
+    float totalRound;//单位：°
+
     float gyro;
     float targetAngle, lastTargetAngle;
     CascadePID imuPID; // yaw陀螺仪pid
@@ -44,14 +50,18 @@ typedef struct
     PID MIT_PID;
     CascadePID imuPID;        // pitch陀螺仪pid
   } pitch;
-	DM_motor_t base_yawMotor;
-	DJI_Motor_t top_yawMotor;
-	DM_motor_t pitchMotor;
+	DM_motor_t base_yawMotor; // 大yaw电机
+	DJI_Motor_t top_yawMotor; // 小yaw电机
+	DM_motor_t pitchMotor;// 云台pitch电机
 	
-	struct{
-		AverFilter pitch,yaw,find;
-	}visionFilter;//视觉数据均值滤波器
-	bool visionEnable;
+	struct
+  {
+		AverFilter pitch;//pitch滑块均值滤波器
+    AverFilter yaw;//yaw滑块均值滤波器
+    AverFilter find;//find滑块均值滤波器
+	}visionFilter; //视觉数据滤波器
+
+	bool visionEnable; // 是否视觉控云台，滚轮
 	bool scan_flag;
 } Gimbal_t;
 

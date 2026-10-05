@@ -11,7 +11,10 @@ void Filter_InitAverFilter(AverFilter *filter,uint16_t size)
 	}
 }
 
-//均值滤波计算
+/**
+ * @brief  滑块均值滤波器计算函数
+ * @output  滑块均值滤波器输出值
+ */
 float Filter_AverCalc(AverFilter *filter,float newVal)
 {
 	float sum=0;

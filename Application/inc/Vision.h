@@ -116,7 +116,7 @@ typedef struct
 	float top_yaw;
 	float pitch;
 	uint8_t mode;
-	uint8_t tracking;
+	uint8_t tracking;// 0表示没瞄到 1表示瞄到装甲板 2表示瞄到符
 	float fire;
 	float v_yaw;
 	float distance;//两车中心距离

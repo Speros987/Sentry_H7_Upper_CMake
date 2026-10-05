@@ -57,7 +57,7 @@ typedef struct _Chassis
 		float nowAngle;			// 此时云台的编码器换算为°值
 		ChassisMode mode;		// 底盘模式 小陀螺或者底盘跟随
 	} rotate;
-	chassis_pattern pattern;
+	chassis_pattern pattern; // 模式
 } Chassis_t;
 
 extern Chassis_t chassis;

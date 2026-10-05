@@ -73,7 +73,7 @@ bool Heat_Limit()
 }
 
 
-
+// 摩擦轮控制
 void Shooter_state(_Bool openflag)
 {
 	if (openflag == 1)

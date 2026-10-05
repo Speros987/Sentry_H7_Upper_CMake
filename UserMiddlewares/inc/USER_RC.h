@@ -134,8 +134,8 @@ typedef struct //统一接口
   int16_t ch4;
 
   uint8_t lleft; //最左边 两档开关
-  uint8_t left;  //左 三挡开关
-  uint8_t right; //右 三挡开关
+  uint8_t left;  //左 三挡开关 上中下 132
+  uint8_t right; //右 三挡开关 上中下 132
   uint8_t rright;//最右边 两档开关
 
   uint8_t lleft_last; //开关旧状态
