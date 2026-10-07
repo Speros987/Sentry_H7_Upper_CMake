@@ -41,17 +41,17 @@ typedef struct
   int16_t ch1;
   int16_t ch2;
   int16_t ch3;
-	int16_t ch4;
+    int16_t ch4;
   /* left and right lever information */
   uint8_t left;
   uint8_t right;
-	uint8_t left_last;
-	uint8_t right_last;
-	
-	int16_t ch[16];        // ch1 ~ ch16 左竖1 左横3  右竖2 右横0
-	
-	uint8_t lost;          // 失联标志
-	uint8_t failsafe;      // 失控保护
+    uint8_t left_last;
+    uint8_t right_last;
+
+    int16_t ch[16];        // ch1 ~ ch16 左竖1 左横3  右竖2 右横0
+
+    uint8_t lost;          // 失联标志
+    uint8_t failsafe;      // 失控保护
 } MC6C_RC_t;
 
 typedef struct
@@ -59,26 +59,26 @@ typedef struct
   int16_t ch1;
   int16_t ch2;
   int16_t ch3;
-	int16_t ch4;
+    int16_t ch4;
   /* left and right lever information */
   uint8_t SA;
   uint8_t SB;
   uint8_t SC;
   uint8_t SD;
-	
+
   uint8_t SA_last;
   uint8_t SB_last;
   uint8_t SC_last;
   uint8_t SD_last;
 
-	int16_t ch[16];        // ch1 ~ ch16
-	
-	uint8_t lost;          // 失联标志
-	uint8_t failsafe;      // 失控保护
+    int16_t ch[16];        // ch1 ~ ch16
+
+    uint8_t lost;          // 失联标志
+    uint8_t failsafe;      // 失控保护
 } ET08_RC_t;
 
 
-typedef struct 
+typedef struct
 {
   /* rocker channel information */
   int16_t ch1;
@@ -134,8 +134,8 @@ typedef struct //统一接口
   int16_t ch4;
 
   uint8_t lleft; //最左边 两档开关
-  uint8_t left;  //左 三挡开关 上中下 132
-  uint8_t right; //右 三挡开关 上中下 132
+  uint8_t left; //左 三挡开关 上中下 132 //左 三挡开关
+  uint8_t right; //右 三挡开关 上中下 132 //右 三挡开关
   uint8_t rright;//最右边 两档开关
 
   uint8_t lleft_last; //开关旧状态
@@ -189,7 +189,7 @@ extern DMA_HandleTypeDef hdma_uart5_rx;
 extern uint8_t usart5RxBuf[25]; // 串口5缓冲区
 extern MC6C_RC_t rcInfo_MC6C;
 extern DR16_RC_T rcInfo_DR16;
-extern ET08_RC_t rcInfo_ET08; 
+extern ET08_RC_t rcInfo_ET08;
 extern RC_TypeDef rcInfo;
 
 #endif

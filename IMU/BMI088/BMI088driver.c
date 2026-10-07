@@ -11,6 +11,15 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 #if defined(BMI088_USE_SPI)
 /**
 ************************************************************************
+* @brief:          BMI088_accel_write_single_reg(reg, data)
+* @param:       reg - 寄存器地址
+*               data - 写入的数据
+* @retval:         void
+* @details:        通过BMI088加速度计的SPI总线写入单个寄存器的宏定义
+************************************************************************
+**/
+/**
+************************************************************************
 * @brief:      	BMI088_accel_write_single_reg(reg, data)
 * @param:       reg - 寄存器地址
 *               data - 写入的数据
@@ -24,6 +33,15 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
         BMI088_write_single_reg((reg), (data));  \
         BMI088_ACCEL_NS_H();                     \
     }
+/**
+************************************************************************
+* @brief:          BMI088_accel_read_single_reg(reg, data)
+* @param:       reg - 寄存器地址
+*               data - 读取的寄存器数据
+* @retval:         void
+* @details:        通过BMI088加速度计的SPI总线读取单个寄存器的宏定义
+************************************************************************
+**/
 /**
 ************************************************************************
 * @brief:      	BMI088_accel_read_single_reg(reg, data)
@@ -43,6 +61,16 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
     }
 /**
 ************************************************************************
+* @brief:          BMI088_accel_read_muli_reg(reg, data, len)
+* @param:       reg - 起始寄存器地址
+*               data - 存储读取数据的缓冲区
+*               len - 要读取的字节数
+* @retval:         void
+* @details:        通过BMI088加速度计的SPI总线连续读取多个寄存器的宏定义
+************************************************************************
+**/
+/**
+************************************************************************
 * @brief:      	BMI088_accel_read_muli_reg(reg, data, len)
 * @param:       reg - 起始寄存器地址
 *               data - 存储读取数据的缓冲区
@@ -60,6 +88,15 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
     }
 /**
 ************************************************************************
+* @brief:          BMI088_gyro_write_single_reg(reg, data)
+* @param:       reg - 寄存器地址
+*               data - 写入的数据
+* @retval:         void
+* @details:        通过BMI088陀螺仪的SPI总线写入单个寄存器的宏定义
+************************************************************************
+**/
+/**
+************************************************************************
 * @brief:      	BMI088_gyro_write_single_reg(reg, data)
 * @param:       reg - 寄存器地址
 *               data - 写入的数据
@@ -75,6 +112,15 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
     }
 /**
 ************************************************************************
+* @brief:          BMI088_gyro_read_single_reg(reg, data)
+* @param:       reg - 寄存器地址
+*               data - 读取的寄存器数据
+* @retval:         void
+* @details:        通过BMI088陀螺仪的SPI总线读取单个寄存器的宏定义
+************************************************************************
+**/
+/**
+************************************************************************
 * @brief:      	BMI088_gyro_read_single_reg(reg, data)
 * @param:       reg - 寄存器地址
 *               data - 读取的寄存器数据
@@ -88,6 +134,16 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
         BMI088_read_single_reg((reg), &(data)); \
         BMI088_GYRO_NS_H();                     \
     }
+/**
+************************************************************************
+* @brief:          BMI088_gyro_read_muli_reg(reg, data, len)
+* @param:       reg - 起始寄存器地址
+*               data - 存储读取数据的缓冲区
+*               len - 要读取的字节数
+* @retval:         void
+* @details:        通过BMI088陀螺仪的SPI总线连续读取多个寄存器的宏定义
+************************************************************************
+**/
 /**
 ************************************************************************
 * @brief:      	BMI088_gyro_read_muli_reg(reg, data, len)
@@ -116,6 +172,14 @@ static void BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len);
 #endif
 /**
 ************************************************************************
+* @brief:          write_BMI088_accel_reg_data_error_init(void)
+* @param:       void
+* @retval:         void
+* @details:        BMI088加速度传感器寄存器数据写入错误处理初始化
+************************************************************************
+**/
+/**
+************************************************************************
 * @brief:      	write_BMI088_accel_reg_data_error_init(void)
 * @param:       void
 * @retval:     	void
@@ -132,6 +196,14 @@ static uint8_t write_BMI088_accel_reg_data_error[BMI088_WRITE_ACCEL_REG_NUM][3] 
         {BMI088_INT_MAP_DATA, BMI088_ACC_INT1_DRDY_INTERRUPT, BMI088_INT_MAP_DATA_ERROR}
 
 };
+/**
+************************************************************************
+* @brief:          write_BMI088_gyro_reg_data_error_init(void)
+* @param:       void
+* @retval:         void
+* @details:        BMI088陀螺仪传感器寄存器数据写入错误处理初始化
+************************************************************************
+**/
 /**
 ************************************************************************
 * @brief:      	write_BMI088_gyro_reg_data_error_init(void)
@@ -152,6 +224,14 @@ static uint8_t write_BMI088_gyro_reg_data_error[BMI088_WRITE_GYRO_REG_NUM][3] =
 };
 /**
 ************************************************************************
+* @brief:          BMI088_init(void)
+* @param:       void
+* @retval:         uint8_t - 错误代码
+* @details:        BMI088传感器初始化函数，包括GPIO和SPI初始化，以及加速度和陀螺仪的初始化
+************************************************************************
+**/
+/**
+************************************************************************
 * @brief:      	BMI088_init(void)
 * @param:       void
 * @retval:     	uint8_t - 错误代码
@@ -170,6 +250,14 @@ uint8_t BMI088_init(void)
 
     return error;
 }
+/**
+************************************************************************
+* @brief:          bmi088_accel_init(void)
+* @param:       void
+* @retval:         uint8_t - 错误代码
+* @details:        BMI088加速度传感器初始化函数，包括通信检查、软件复位、配置寄存器写入及检查
+************************************************************************
+**/
 /**
 ************************************************************************
 * @brief:      	bmi088_accel_init(void)
@@ -224,6 +312,14 @@ uint8_t bmi088_accel_init(void)
 }
 /**
 ************************************************************************
+* @brief:          bmi088_gyro_init(void)
+* @param:       void
+* @retval:         uint8_t - 错误代码
+* @details:        BMI088陀螺仪传感器初始化函数，包括通信检查、软件复位、配置寄存器写入及检查
+************************************************************************
+**/
+/**
+************************************************************************
 * @brief:      	bmi088_gyro_init(void)
 * @param:       void
 * @retval:     	uint8_t - 错误代码
@@ -276,6 +372,16 @@ uint8_t bmi088_gyro_init(void)
 }
 /**
 ************************************************************************
+* @brief:          BMI088_read(float gyro[3], float accel[3], float *temperate)
+* @param:       gyro - 陀螺仪数据数组 (x, y, z)
+* @param:       accel - 加速度计数据数组 (x, y, z)
+* @param:       temperate - 温度数据指针
+* @retval:         void
+* @details:        读取BMI088传感器数据，包括加速度、陀螺仪和温度
+************************************************************************
+**/
+/**
+************************************************************************
 * @brief:      	BMI088_read(float gyro[3], float accel[3], float *temperate)
 * @param:       gyro - 陀螺仪数据数组 (x, y, z)
 * @param:       accel - 加速度计数据数组 (x, y, z)
@@ -323,6 +429,15 @@ void BMI088_read(float gyro[3], float accel[3], float *temperate)
 #if defined(BMI088_USE_SPI)
 /**
 ************************************************************************
+* @brief:          BMI088_write_single_reg(uint8_t reg, uint8_t data)
+* @param:       reg - 寄存器地址
+* @param:       data - 写入的数据
+* @retval:         void
+* @details:        向BMI088传感器写入单个寄存器的数据
+************************************************************************
+**/
+/**
+************************************************************************
 * @brief:      	BMI088_write_single_reg(uint8_t reg, uint8_t data)
 * @param:       reg - 寄存器地址
 * @param:       data - 写入的数据
@@ -335,6 +450,15 @@ static void BMI088_write_single_reg(uint8_t reg, uint8_t data)
     BMI088_read_write_byte(reg);
     BMI088_read_write_byte(data);
 }
+/**
+************************************************************************
+* @brief:          BMI088_read_single_reg(uint8_t reg, uint8_t *return_data)
+* @param:       reg - 寄存器地址
+* @param:       return_data - 读取的寄存器数据
+* @retval:         void
+* @details:        从BMI088传感器读取单个寄存器的数据
+************************************************************************
+**/
 /**
 ************************************************************************
 * @brief:      	BMI088_read_single_reg(uint8_t reg, uint8_t *return_data)
@@ -362,6 +486,16 @@ static void BMI088_read_single_reg(uint8_t reg, uint8_t *return_data)
 //    }
 
 //}
+/**
+************************************************************************
+* @brief:          BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len)
+* @param:       reg - 起始寄存器地址
+*               buf - 存储读取数据的缓冲区
+*               len - 要读取的字节数
+* @retval:         void
+* @details:        从BMI088传感器连续读取多个寄存器的数据
+************************************************************************
+**/
 /**
 ************************************************************************
 * @brief:      	BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len)

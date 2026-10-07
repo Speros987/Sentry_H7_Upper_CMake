@@ -3,16 +3,13 @@
 
 #include "main.h"
 
-#ifndef ABS
-#define ABS(x) ((x)>=0?(x):-(x))
-#endif
-
+//б�½ṹ��
 //斜坡结构体
 typedef struct{
-	float target; //目标值
-	float step; //步进值
-	float value; //当前值
-	float deadzone; //死区，若差值小于该值则不进行增减
+    float target; //目标值 //Ŀ��ֵ
+    float step; //步进值 //����ֵ
+    float value; //当前值 //��ǰֵ
+    float deadzone; //死区，若差值小于该值则不进行增减 //����������ֵС�ڸ�ֵ�򲻽�������
 }Slope;
 
 void Slope_Init(Slope *slope,float step,float deadzone);

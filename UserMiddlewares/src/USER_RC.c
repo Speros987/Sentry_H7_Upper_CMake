@@ -22,8 +22,8 @@ extern DMA_HandleTypeDef hdma_uart5_rx;
 
 void RC_Init()
 {
-	HAL_UARTEx_ReceiveToIdle_DMA(&huart5, usart5RxBuf, sizeof(usart5RxBuf));
-	__HAL_DMA_DISABLE_IT(&hdma_uart5_rx, DMA_IT_HT);
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart5, usart5RxBuf, sizeof(usart5RxBuf));
+    __HAL_DMA_DISABLE_IT(&hdma_uart5_rx, DMA_IT_HT);
 }
 
 SwitchState SBUS_SwitchState(int16_t ch)
@@ -37,7 +37,7 @@ float DeadZone(float x, float zone)
     if (x > -zone && x < zone)
         return 0.0f;
     return x;
-}	
+}
 void MC6C_ParseSBUS(uint8_t *buf, MC6C_RC_t *rc)
 {
     /* 帧头帧尾校验 */
@@ -66,54 +66,54 @@ void MC6C_ParseSBUS(uint8_t *buf, MC6C_RC_t *rc)
     uint8_t flag = buf[23];
     rc->lost     = (flag & (1 << 2)) ? 1 : 0;
     rc->failsafe = (flag & (1 << 3)) ? 1 : 0;
-		
-	rc->left_last = rc->left;
-	rc->right_last = rc->right;
 
-	rc->ch1 = rc->ch[0] - 1000;		
-	rc->ch2 = rc->ch[1] - 1000;
-	rc->ch3 = rc->ch[2] - 1000;
-	rc->ch4	= rc->ch[3] - 1000;
-	rc->ch1 = DeadZone(rc->ch1,20);
-	rc->ch2 = DeadZone(rc->ch2,20);
-	rc->ch3 = DeadZone(rc->ch3,20);
-	rc->ch4 = DeadZone(rc->ch4,20);
+    rc->left_last = rc->left;
+    rc->right_last = rc->right;
+
+    rc->ch1 = rc->ch[0] - 1000;
+    rc->ch2 = rc->ch[1] - 1000;
+    rc->ch3 = rc->ch[2] - 1000;
+    rc->ch4	= rc->ch[3] - 1000;
+    rc->ch1 = DeadZone(rc->ch1,20);
+    rc->ch2 = DeadZone(rc->ch2,20);
+    rc->ch3 = DeadZone(rc->ch3,20);
+    rc->ch4 = DeadZone(rc->ch4,20);
     rc->left  = SBUS_SwitchState(rc->ch[4]);
     rc->right = SBUS_SwitchState(rc->ch[5]);
 }
 
 void DR16_ParseSBUS(uint8_t* buff,DR16_RC_T *rc)
 {
-	rc->ch1 = (buff[0] | buff[1] << 8) & 0x07FF;
-	rc->ch1 -= 1024;		//右横
-	rc->ch2 = (buff[1] >> 3 | buff[2] << 5) & 0x07FF;
-	rc->ch2 -= 1024;		//右竖
-	rc->ch3 = (buff[2] >> 6 | buff[3] << 2 | buff[4] << 10) & 0x07FF;
-	rc->ch3 -= 1024;		//左横
-	rc->ch4 = (buff[4] >> 1 | buff[5] << 7) & 0x07FF;
-	rc->ch4 -= 1024;		//左竖
-	
+    rc->ch1 = (buff[0] | buff[1] << 8) & 0x07FF;
+    rc->ch1 -= 1024;		//右横
+    rc->ch2 = (buff[1] >> 3 | buff[2] << 5) & 0x07FF;
+    rc->ch2 -= 1024;		//右竖
+    rc->ch3 = (buff[2] >> 6 | buff[3] << 2 | buff[4] << 10) & 0x07FF;
+    rc->ch3 -= 1024;		//左横
+    rc->ch4 = (buff[4] >> 1 | buff[5] << 7) & 0x07FF;
+    rc->ch4 -= 1024;		//左竖
+
   /* prevent remote control zero deviation */
-	rc->ch1 = DeadZone(rc->ch1,50);
-	rc->ch2 = DeadZone(rc->ch2,50); //设静止死区
-	rc->ch3 = DeadZone(rc->ch3,50);
-	rc->ch4 = DeadZone(rc->ch4,50); //设静止死区
-	
-	rc->left_last = rc->left;
-	rc->right_last = rc->right;
+    rc->ch1 = DeadZone(rc->ch1,50);
+    rc->ch2 = DeadZone(rc->ch2,50); //设静止死区
+    rc->ch3 = DeadZone(rc->ch3,50);
+    rc->ch4 = DeadZone(rc->ch4,50); //设静止死区
 
-	rc->left = ((buff[5] >> 4) & 0x000C) >> 2;  //sw1   中间是3，上边是1，下边是2
-	rc->right = (buff[5] >> 4) & 0x0003;        //sw2
+    rc->left_last = rc->left;
+    rc->right_last = rc->right;
 
-	rc->mouse.x = buff[6] | (buff[7] << 8); // x axis
-	rc->mouse.y = buff[8] | (buff[9] << 8);
-	rc->mouse.z = buff[10] | (buff[11] << 8);
+    rc->left = ((buff[5] >> 4) & 0x000C) >> 2;  //sw1   中间是3，上边是1，下边是2
+    rc->right = (buff[5] >> 4) & 0x0003;        //sw2
 
-	rc->mouse.l = buff[12];
-	rc->mouse.r = buff[13];
+    rc->mouse.x = buff[6] | (buff[7] << 8); // x axis
+    rc->mouse.y = buff[8] | (buff[9] << 8);
+    rc->mouse.z = buff[10] | (buff[11] << 8);
 
-	rc->kb.key_code = buff[14] | buff[15] << 8; // key borad code
-	rc->wheel = (buff[16] | buff[17] << 8) - 1024;
+    rc->mouse.l = buff[12];
+    rc->mouse.r = buff[13];
+
+    rc->kb.key_code = buff[14] | buff[15] << 8; // key borad code
+    rc->wheel = (buff[16] | buff[17] << 8) - 1024;
 }
 
 
@@ -145,20 +145,20 @@ void ET08_ParseSBUS(uint8_t *buff, ET08_RC_t *rc)
     rc->lost     = (flag & (1 << 2)) ? 1 : 0;
     rc->failsafe = (flag & (1 << 3)) ? 1 : 0;
 
-	rc->ch1 = rc->ch[0] - 1024;//右横
-	rc->ch2 = rc->ch[1] - 1024;//右竖
-	rc->ch3 = rc->ch[2] - 1024;//左横
-	rc->ch4 = rc->ch[3] - 1024;//左竖	
+    rc->ch1 = rc->ch[0] - 1024;//右横
+    rc->ch2 = rc->ch[1] - 1024;//右竖
+    rc->ch3 = rc->ch[2] - 1024;//左横
+    rc->ch4 = rc->ch[3] - 1024;//左竖
   /* prevent remote control zero deviation */
-  	rc->ch1 = DeadZone(rc->ch1,10);
-	rc->ch2 = DeadZone(rc->ch2,10); 
-	rc->ch3 = DeadZone(rc->ch3,10);
-	rc->ch4 = DeadZone(rc->ch4,10); //设静止死区
+      rc->ch1 = DeadZone(rc->ch1,10);
+    rc->ch2 = DeadZone(rc->ch2,10);
+    rc->ch3 = DeadZone(rc->ch3,10);
+    rc->ch4 = DeadZone(rc->ch4,10); //设静止死区
 
-	rc->SA_last = rc->SA;
-	rc->SB_last = rc->SB;
-	rc->SC_last = rc->SC;
-	rc->SD_last = rc->SD;
+    rc->SA_last = rc->SA;
+    rc->SB_last = rc->SB;
+    rc->SC_last = rc->SC;
+    rc->SD_last = rc->SD;
 
     rc->SA = SBUS_SwitchState(rc->ch[4]);
     rc->SB = SBUS_SwitchState(rc->ch[5]);
@@ -170,104 +170,104 @@ void ET08_ParseSBUS(uint8_t *buff, ET08_RC_t *rc)
 //统一接口
 void MC6C_ToUnified(MC6C_RC_t *rc_MC6C, RC_TypeDef *rc)
 {
-	rc->ch1 = rc_MC6C->ch1;		
-	rc->ch2 = rc_MC6C->ch2;
-	rc->ch3 = rc_MC6C->ch3;
-	rc->ch4	= rc_MC6C->ch4;
+    rc->ch1 = rc_MC6C->ch1;
+    rc->ch2 = rc_MC6C->ch2;
+    rc->ch3 = rc_MC6C->ch3;
+    rc->ch4	= rc_MC6C->ch4;
 
-	rc->left = rc_MC6C->left;
-	rc->right = rc_MC6C->right;
-	rc->left_last = rc_MC6C->left_last;
-	rc->right_last = rc_MC6C->right_last;
-	rc->wheel = 0;
-	rc->failsafe = rc_MC6C->failsafe;
-	rc->lost = rc_MC6C->lost;
+    rc->left = rc_MC6C->left;
+    rc->right = rc_MC6C->right;
+    rc->left_last = rc_MC6C->left_last;
+    rc->right_last = rc_MC6C->right_last;
+    rc->wheel = 0;
+    rc->failsafe = rc_MC6C->failsafe;
+    rc->lost = rc_MC6C->lost;
 }
 
 void DR16_ToUnified(DR16_RC_T *rc_DR16, RC_TypeDef *rc)
 {
-	rc->ch1 = rc_DR16->ch1;		
-	rc->ch2 = rc_DR16->ch2;
-	rc->ch3 = rc_DR16->ch3;
-	rc->ch4	= rc_DR16->ch4;
+    rc->ch1 = rc_DR16->ch1;
+    rc->ch2 = rc_DR16->ch2;
+    rc->ch3 = rc_DR16->ch3;
+    rc->ch4	= rc_DR16->ch4;
 
-	rc->left = rc_DR16->left;
-	rc->right = rc_DR16->right;
-	rc->left_last = rc_DR16->left_last;
-	rc->right_last = rc_DR16->right_last;
+    rc->left = rc_DR16->left;
+    rc->right = rc_DR16->right;
+    rc->left_last = rc_DR16->left_last;
+    rc->right_last = rc_DR16->right_last;
 
-	rc->mouse.x = rc_DR16->mouse.x;
-	rc->mouse.y = rc_DR16->mouse.y;
-	rc->mouse.z = rc_DR16->mouse.z;
-	rc->mouse.l = rc_DR16->mouse.l;
-	rc->mouse.r = rc_DR16->mouse.r;
-	rc->kb.key_code = rc_DR16->kb.key_code;
+    rc->mouse.x = rc_DR16->mouse.x;
+    rc->mouse.y = rc_DR16->mouse.y;
+    rc->mouse.z = rc_DR16->mouse.z;
+    rc->mouse.l = rc_DR16->mouse.l;
+    rc->mouse.r = rc_DR16->mouse.r;
+    rc->kb.key_code = rc_DR16->kb.key_code;
 
-	rc->wheel = rc_DR16->wheel;
+    rc->wheel = rc_DR16->wheel;
 }
 
 void ET08_ToUnified(ET08_RC_t *rc_ET08, RC_TypeDef *rc)
 {
-	rc->ch1 = rc_ET08->ch1;		
-	rc->ch2 = rc_ET08->ch2;
-	rc->ch3 = rc_ET08->ch3;
-	rc->ch4	= rc_ET08->ch4;
+    rc->ch1 = rc_ET08->ch1;
+    rc->ch2 = rc_ET08->ch2;
+    rc->ch3 = rc_ET08->ch3;
+    rc->ch4	= rc_ET08->ch4;
 
-	rc->lleft = rc_ET08->SA;
-	rc->left = rc_ET08->SB;
-	rc->right = rc_ET08->SC;
-	rc->rright = rc_ET08->SD;
+    rc->lleft = rc_ET08->SA;
+    rc->left = rc_ET08->SB;
+    rc->right = rc_ET08->SC;
+    rc->rright = rc_ET08->SD;
 
-	rc->lleft_last = rc_ET08->SA_last;
-	rc->left_last = rc_ET08->SB_last;
-	rc->right_last = rc_ET08->SC_last;
-	rc->rright_last = rc_ET08->SD_last;
+    rc->lleft_last = rc_ET08->SA_last;
+    rc->left_last = rc_ET08->SB_last;
+    rc->right_last = rc_ET08->SC_last;
+    rc->rright_last = rc_ET08->SD_last;
 
-	rc->wheel = 0;
-	rc->failsafe = rc_ET08->failsafe;
-	rc->lost = rc_ET08->lost;
+    rc->wheel = 0;
+    rc->failsafe = rc_ET08->failsafe;
+    rc->lost = rc_ET08->lost;
 }
 
 // 串口5空闲中断回调
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
-	if (huart == &huart2)
+    if (huart == &huart2)
 	{
-		B2B_Receive();
+	    B2B_Receive();
 	}
-	if (huart == &huart5)
+    if (huart == &huart5)
 	{
 		#if (USER_RC_TYPE == USER_RC_TYPE_MC6C)
-			MC6C_ParseSBUS(usart5RxBuf, &rcInfo_MC6C);
-			MC6C_ToUnified(&rcInfo_MC6C, &rcInfo);
+		    MC6C_ParseSBUS(usart5RxBuf, &rcInfo_MC6C);
+		    MC6C_ToUnified(&rcInfo_MC6C, &rcInfo);
 		#elif (USER_RC_TYPE == USER_RC_TYPE_DR16)
-			DR16_ParseSBUS(usart5RxBuf,&rcInfo_DR16);
-			DR16_ToUnified(&rcInfo_DR16, &rcInfo);
+		    DR16_ParseSBUS(usart5RxBuf,&rcInfo_DR16);
+		    DR16_ToUnified(&rcInfo_DR16, &rcInfo);
 		#else
-			ET08_ParseSBUS(usart5RxBuf, &rcInfo_ET08);
-			ET08_ToUnified(&rcInfo_ET08, &rcInfo);
+		    ET08_ParseSBUS(usart5RxBuf, &rcInfo_ET08);
+		    ET08_ToUnified(&rcInfo_ET08, &rcInfo);
 		#endif
-		rc_true_flag = 0;
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart5, usart5RxBuf, sizeof(usart5RxBuf));
-		__HAL_DMA_DISABLE_IT(&hdma_uart5_rx, DMA_IT_HT);
+	    rc_true_flag = 0;
+	    HAL_UARTEx_ReceiveToIdle_DMA(&huart5, usart5RxBuf, sizeof(usart5RxBuf));
+	    __HAL_DMA_DISABLE_IT(&hdma_uart5_rx, DMA_IT_HT);
 	}
 }
 
 void Task_RC_Callback()
 {
 	/**********特殊情况处理*********************/
-	if (rcInfo.right == 2) // 遥控器右拨码开关向下，急停
+    if (rcInfo.right == 2) // 遥控器右拨码开关向下，急停
 	{
-    	disable_motor_mode(&hfdcan2,0x01,MIT_MODE);
-		HAL_Delay(10);
-		USER_CAN_SetMotorCurrent(&hfdcan1, 0x1FF, 0, 0, 0, 0);
-		HAL_Delay(10);
-		USER_CAN_SetMotorCurrent(&hfdcan1, 0x200, 0, 0, 0, 0); // 关断电机
-		HAL_Delay(10);
-		USER_CAN_SetMotorCurrent(&hfdcan2,0x1FF,0,0,0,0);//关断电机
-		STOPFLAG = 1;
-    	B2B_Transmit();
-		osThreadResume(ErrorTaskHandle); // 恢复错误任务 饿死其他任务
+        disable_motor_mode(&hfdcan2,0x01,MIT_MODE);
+	    HAL_Delay(10);
+	    USER_CAN_SetMotorCurrent(&hfdcan1, 0x1FF, 0, 0, 0, 0);
+	    HAL_Delay(10);
+	    USER_CAN_SetMotorCurrent(&hfdcan1, 0x200, 0, 0, 0, 0); // 关断电机
+	    HAL_Delay(10);
+	    USER_CAN_SetMotorCurrent(&hfdcan2,0x1FF,0,0,0,0);//关断电机
+	    STOPFLAG = 1;
+        B2B_Transmit();
+	    osThreadResume(ErrorTaskHandle); // 恢复错误任务 饿死其他任务
 	}
 }
 
@@ -275,15 +275,15 @@ void Task_RC_Callback()
 void OS_RcCallback(void const *argument)
 {
 
-	for (;;)
+    for (;;)
 	{
-		rc_true_flag++;
-		if (rc_true_flag >= 100)//长时间未接收到遥控器 手动重新接收
+	    rc_true_flag++;
+	    if (rc_true_flag >= 100)//长时间未接收到遥控器 手动重新接收
 		{
-			HAL_UARTEx_ReceiveToIdle_DMA(&huart5, usart5RxBuf, sizeof(usart5RxBuf));
-			__HAL_DMA_DISABLE_IT(&hdma_uart5_rx, DMA_IT_HT);
+		    HAL_UARTEx_ReceiveToIdle_DMA(&huart5, usart5RxBuf, sizeof(usart5RxBuf));
+		    __HAL_DMA_DISABLE_IT(&hdma_uart5_rx, DMA_IT_HT);
 		}
-		Task_RC_Callback();
-		osDelay(15);
+	    Task_RC_Callback();
+	    osDelay(15);
 	}
 }

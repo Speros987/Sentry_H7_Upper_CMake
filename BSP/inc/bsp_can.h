@@ -4,6 +4,7 @@
 #include "fdcan.h"
 #include "cmsis_os.h"
 
+//can????? debug?
 //can错误计数器 debug用
 typedef struct
 {
@@ -15,6 +16,7 @@ typedef struct
 //can初始化
 void CAN_Init(void);
 
+/****??????****/
 /****外部调用函数****/
 void USER_CAN_Send(FDCAN_HandleTypeDef* hfdcan,int16_t StdId,uint8_t* tx_data);
 

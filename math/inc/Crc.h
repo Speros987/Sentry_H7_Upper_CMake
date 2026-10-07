@@ -3,8 +3,6 @@
 
 #include "stdint.h"
 #include "string.h"
-#define    FALSE    0
-#define    TRUE     1
 
 // CRC8
 void Append_CRC8_Check_Sum( uint8_t *pchMessage, uint16_t dwLength);

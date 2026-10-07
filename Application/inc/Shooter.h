@@ -3,44 +3,42 @@
 
 #include "Moto.h"
 #include "stdbool.h"
-#include "Slope.h"
 #include "USER_Moto.h"
 
+#include <stdbool.h>
 
 enum
 {
-	IDLE = 0,			//空闲，不拨弹
-	TRIGGER,			//单次拨弹
-	TRIGGER_REVERSE,	//堵转后反转拨弹机构
-	TRIGGER_CONTINUE,	//连续拨弹
-	TRIGGER_DOUBLE,		//双发拨弹，当前代码中基本未使用
-	TRIGGER_CLICK,		//点射一发
+    IDLE = 0, //空闲，不拨弹
+    TRIGGER, //单次拨弹
+    TRIGGER_REVERSE, //堵转后反转拨弹机构
+    TRIGGER_CONTINUE, //连续拨弹
+    TRIGGER_DOUBLE
 };
 
 typedef struct
 {
-	int number;				  // 发弹量
-	uint8_t workState;		  // 工作状态
-	
-	DJI_Motor_t triggerMotor; // 拨弹电机和摩擦轮电机
-	DJI_Motor_t fricMotor[2];
-	
-	bool fricOpenFlag;	  // 摩擦轮开启标志  0开1关
+    int number;				  // 发弹量
+    uint8_t workState;		  // 工作状态
 
-	int16_t fricSpd;	  // 摩擦轮速度
-	Slope fricSlope;	  // 摩擦轮斜坡
-	float ave_bullet_speed;
-	float bullet_speed;
+    DJI_Motor_t triggerMotor; // 拨弹电机和摩擦轮电机
+    DJI_Motor_t fricMotor[2];
 
-	float distance;		 // 测距 用来补偿
-	float last_bullet_speed;
-	uint8_t box;
-	
-	struct
+    bool fricOpenFlag;	  // 摩擦轮开启标志  0开1关
+
+    int16_t fricSpd;	  // 摩擦轮速度
+    float ave_bullet_speed;
+    float bullet_speed;
+
+    float distance;		 // 测距 用来补偿
+    float last_bullet_speed;
+    uint8_t box;
+
+    struct
 	{
-		uint16_t judgeCnt, reverseCnt; // 堵转判定计数器,反转计数器
-		uint16_t fric_judgeCnt, fric_reverseCnt;
-		_Bool state;
+	    uint16_t judgeCnt, reverseCnt; // 堵转判定计数器,反转计数器
+	    uint16_t fric_judgeCnt, fric_reverseCnt;
+	    bool state;
 	} block; // 堵转处理相关数据
 
 } Shooter;
@@ -48,6 +46,5 @@ typedef struct
 extern Shooter shooter;
 
 void Shooter_Init(void);
-void Shooter_state(_Bool openflag);
 
 #endif

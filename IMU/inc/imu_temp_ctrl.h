@@ -3,10 +3,11 @@
 
 typedef struct
 {
-    float q[4]; // 四元数估计值
-    float gyro[3];  // 角速度
-    float accel[3]; // 加速度
-		float temp;			// 温度
+    float q[4]; // 四元数估计值 // ��Ԫ������ֵ
+    float gyro[3]; // 角速度 // ���ٶ�
+    float accel[3]; // 加速度 // ���ٶ�
+	    float temp; // 温度 // �¶�
+    // λ��
     // 位姿
     float roll;
     float pitch;

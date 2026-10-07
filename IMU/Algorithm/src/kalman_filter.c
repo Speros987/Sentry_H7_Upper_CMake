@@ -136,9 +136,9 @@ static void H_K_R_Adjustment(KalmanFilter_t *kf);
 
 void* user_malloc(size_t size)
 {
-	void* tmp = 0;
-	tmp = pvPortMalloc(size);
-	return tmp;
+    void* tmp = 0;
+    tmp = pvPortMalloc(size);
+    return tmp;
 }
 
 
@@ -152,7 +152,7 @@ void* user_malloc(size_t size)
  */
 void Kalman_Filter_Init(KalmanFilter_t *kf, uint8_t xhatSize, uint8_t uSize, uint8_t zSize)
 {
-	
+
     sizeof_float = sizeof(float);
     sizeof_double = sizeof(double);
 
@@ -256,15 +256,15 @@ void Kalman_Filter_Init(KalmanFilter_t *kf, uint8_t xhatSize, uint8_t uSize, uin
 
     kf->S_data = (float *)user_malloc(sizeof_float * kf->xhatSize * kf->xhatSize);
     memset(kf->S_data, 0, sizeof_float * kf->xhatSize * kf->xhatSize);
-	kf->temp_matrix_data = (float *)user_malloc(sizeof_float * kf->xhatSize * kf->xhatSize);
-	memset(kf->temp_matrix_data, 0, sizeof_float * kf->xhatSize * kf->xhatSize);
+    kf->temp_matrix_data = (float *)user_malloc(sizeof_float * kf->xhatSize * kf->xhatSize);
+    memset(kf->temp_matrix_data, 0, sizeof_float * kf->xhatSize * kf->xhatSize);
     kf->temp_matrix_data1 = (float *)user_malloc(sizeof_float * kf->xhatSize * kf->xhatSize);
     memset(kf->temp_matrix_data1, 0, sizeof_float * kf->xhatSize * kf->xhatSize);
-	kf->temp_vector_data = (float *)user_malloc(sizeof_float * kf->xhatSize);
+    kf->temp_vector_data = (float *)user_malloc(sizeof_float * kf->xhatSize);
     memset(kf->temp_vector_data, 0, sizeof_float * kf->xhatSize);
-	kf->temp_vector_data1 = (float *)user_malloc(sizeof_float * kf->xhatSize);
-	memset(kf->temp_vector_data, 0, sizeof_float * kf->xhatSize);
-	
+    kf->temp_vector_data1 = (float *)user_malloc(sizeof_float * kf->xhatSize);
+    memset(kf->temp_vector_data, 0, sizeof_float * kf->xhatSize);
+
     Matrix_Init(&kf->S, kf->xhatSize, kf->xhatSize, (float *)kf->S_data);
     Matrix_Init(&kf->temp_matrix, kf->xhatSize, kf->xhatSize, (float *)kf->temp_matrix_data);
     Matrix_Init(&kf->temp_matrix1, kf->xhatSize, kf->xhatSize, (float *)kf->temp_matrix_data1);
@@ -281,22 +281,22 @@ void Kalman_Filter_Init(KalmanFilter_t *kf, uint8_t xhatSize, uint8_t uSize, uin
 void Kalman_Filter_Reset(KalmanFilter_t *kf, uint8_t xhatSize, uint8_t uSize, uint8_t zSize)
 {
     memset(kf->MeasurementMap, 0, sizeof(uint8_t) * zSize);
-    memset(kf->MeasurementDegree, 0, sizeof_float * zSize);	
+    memset(kf->MeasurementDegree, 0, sizeof_float * zSize);
     memset(kf->MatR_DiagonalElements, 0, sizeof_float * zSize);
     memset(kf->StateMinVariance, 0, sizeof_float * xhatSize);
     memset(kf->temp, 0, sizeof(uint8_t) * zSize);
-	
+
     memset(kf->FilteredValue, 0, sizeof_float * xhatSize);
     memset(kf->MeasuredVector, 0, sizeof_float * zSize);
     memset(kf->ControlVector, 0, sizeof_float * uSize);
 
     memset(kf->xhat_data, 0, sizeof_float * xhatSize);
 
-	memset(kf->xhatminus_data, 0, sizeof_float * xhatSize);
-	
+    memset(kf->xhatminus_data, 0, sizeof_float * xhatSize);
+
     if(uSize != 0)
-    {memset(kf->u_data, 0, sizeof_float * uSize);}	
-	
+    {memset(kf->u_data, 0, sizeof_float * uSize);}
+
     memset(kf->z_data, 0, sizeof_float * zSize);
 
     memset(kf->P_data, 0, sizeof_float * xhatSize * xhatSize);
@@ -304,11 +304,11 @@ void Kalman_Filter_Reset(KalmanFilter_t *kf, uint8_t xhatSize, uint8_t uSize, ui
     memset(kf->Pminus_data, 0, sizeof_float * xhatSize * xhatSize);
 
     memset(kf->F_data, 0, sizeof_float * xhatSize * xhatSize);
-    memset(kf->FT_data, 0, sizeof_float * xhatSize * xhatSize);	
-	
-	if(uSize != 0)
+    memset(kf->FT_data, 0, sizeof_float * xhatSize * xhatSize);
+
+    if(uSize != 0)
     {memset(kf->B_data, 0, sizeof_float * xhatSize * uSize);}
-	
+
     memset(kf->H_data, 0, sizeof_float * zSize * xhatSize);
     memset(kf->HT_data, 0, sizeof_float * xhatSize * zSize);
 
@@ -316,8 +316,8 @@ void Kalman_Filter_Reset(KalmanFilter_t *kf, uint8_t xhatSize, uint8_t uSize, ui
 
     memset(kf->R_data, 0, sizeof_float * zSize * zSize);
 
-    memset(kf->K_data, 0, sizeof_float * xhatSize * zSize);	
-	
+    memset(kf->K_data, 0, sizeof_float * xhatSize * zSize);
+
     kf->SkipEq1 = 0;
     kf->SkipEq2 = 0;
     kf->SkipEq3 = 0;
@@ -429,7 +429,7 @@ void Kalman_Filter_P_Update(KalmanFilter_t *kf)
 
 /**
  * @brief 执行卡尔曼滤波黄金五式,提供了用户定义函数,可以替代五个中的任意一个环节,方便自行扩展为EKF/UKF/ESKF/AUKF等
- * 
+ *
  * @param kf kf类型定义
  * @return float* 返回滤波值
  */

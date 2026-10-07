@@ -15,7 +15,8 @@
  ******************************************************************************
  */
 #include "USER_Moto.h"
-
+#include "degree.h"
+#include "dji_angle.h"
 
 /********************积累DJI电机累计角度************************/
 /**
@@ -28,11 +29,12 @@
  */
 void Motor_StartCalcAngle(DJI_Motor_t *motor)
 {
-	motor->totalAngle = 0;               // 累计编码器值清零
-	motor->lastAngle = motor->angle;     // 记录当前编码器角度，作为差分基准
-	motor->targetAngle = 0;              // 目标角度(编码器值)清零
+    motor->totalAngle = 0; // 累计编码器值清零
+    motor->lastAngle = motor->angle; // 记录当前编码器角度，作为差分基准
+    motor->targetAngle = 0; // 目标角度(编码器值)清零
 }
 
+// 计算电机累计转过的圈数
 /**
  * @brief  计算大疆电机累计转过的编码器值（带绕圈识别）
  * @param  motor 大疆电机结构体指针
@@ -44,17 +46,10 @@ void Motor_StartCalcAngle(DJI_Motor_t *motor)
  */
 void Motor_CalcAngle(DJI_Motor_t *motor)
 {
-	int32_t dAngle = 0;                                  // 本周期相对上周期的角度增量（编码器值）
-	if (motor->angle - motor->lastAngle < -4000)         // 差值小于 -4000，判定为正向跨越零点
-		dAngle = motor->angle + (8191 - motor->lastAngle);   // 补偿一圈后的实际增量
-	else if (motor->angle - motor->lastAngle > 4000)     // 差值大于 +4000，判定为反向跨越零点
-		dAngle = -motor->lastAngle - (8191 - motor->angle);  // 补偿一圈后的实际增量
-	else
-		dAngle = motor->angle - motor->lastAngle;            // 未跨零点，直接差分
-	// 将角度增量加入计数器
-	motor->totalAngle += dAngle;
-	// 记录角度
-	motor->lastAngle = motor->angle;
+    // 将角度增量加入计数器
+    motor->totalAngle += ModularDJIAngleTowards(motor->angle - motor->lastAngle, 0);
+    // 记录角度
+    motor->lastAngle = motor->angle;
 }
 
 /********************积累舵电机累计角度************************/
@@ -67,10 +62,8 @@ void Motor_CalcAngle(DJI_Motor_t *motor)
  */
 void Motor_StartCalcAngle_J4310(Double_motor_t *motor)
 {
-	motor->totalAngle = motor->TurnAngle;    // 以当前实际角度作为累计角度起点
-	if (motor->totalAngle > 360 / 2.0f)      // 起点大于 180°（位于负半圈对应区间）
-		motor->totalAngle -= 360;            // 减去 360°，归一化到 -180°~180°
-	motor->lastAngle = motor->TurnAngle;     // 记录当前角度，作为差分基准
+    motor->totalAngle = ModularDegreeTowards(motor->TurnAngle, 0.0f);
+    motor->lastAngle = motor->TurnAngle; // 记录当前角度，作为差分基准
 }
 
 /**
@@ -82,15 +75,8 @@ void Motor_StartCalcAngle_J4310(Double_motor_t *motor)
  */
 void Motor_CalcAngle_J4310(Double_motor_t *motor)
 {
-	float dAngle = 0;                                            // 本周期相对上周期的角度增量（°）
-	if (motor->TurnAngle - motor->lastAngle < -180)              // 差值小于 -180°，判定为正向跨越零点
-		dAngle = motor->TurnAngle + (360 - motor->lastAngle);    // 补偿一圈后的实际增量
-	else if (motor->TurnAngle - motor->lastAngle > 180)          // 差值大于 +180°，判定为反向跨越零点
-		dAngle = -motor->lastAngle - (360 - motor->TurnAngle);   // 补偿一圈后的实际增量
-	else
-		dAngle = motor->TurnAngle - motor->lastAngle;            // 未跨零点，直接差分
-	motor->totalAngle += dAngle;                                 // 累加增量，得到多圈总角度
-	motor->lastAngle = motor->TurnAngle;                         // 记录本周期角度，供下周期差分
+    motor->totalAngle += ModularDegreeTowards(motor->TurnAngle - motor->lastAngle, 0.0f);
+    motor->lastAngle = motor->TurnAngle; // 记录本周期角度，供下周期差分
 }
 
 /**
@@ -105,8 +91,8 @@ void Motor_CalcAngle_J4310(Double_motor_t *motor)
 int float_to_uint(float x_float, float x_min, float x_max, int bits)
 {
     /* Converts a float to an unsigned int, given range and number of bits */
-    float span = x_max - x_min;                                 // 量程跨度 = 上限 - 下限
-    float offset = x_min;                                       // 零点偏移 = 下限
+    float span = x_max - x_min; // 量程跨度 = 上限 - 下限
+    float offset = x_min; // 零点偏移 = 下限
     return (int) ((x_float-offset)*((float)((1<<bits)-1))/span); // 归一化映射到整型量程并取整
 }
 
@@ -122,8 +108,8 @@ int float_to_uint(float x_float, float x_min, float x_max, int bits)
 float uint_to_float(int x_int, float x_min, float x_max, int bits)
 {
     /* converts unsigned int to float, given range and number of bits */
-    float span = x_max - x_min;                                 // 量程跨度 = 上限 - 下限
-    float offset = x_min;                                       // 零点偏移 = 下限
+    float span = x_max - x_min;
+    float offset = x_min;
     return ((float)x_int)*span/((float)((1<<bits)-1)) + offset; // 整型量程映射回浮点量程
 }
 
@@ -138,10 +124,10 @@ float uint_to_float(int x_int, float x_min, float x_max, int bits)
  */
 void DJIMotor_Update(DJI_Motor_t *motor, int16_t angle, int16_t speed, int16_t torque, int8_t temp) //大疆电机数据更新
 {
-	motor->angle = angle;     // 更新编码器角度
-	motor->speed = speed;     // 更新转子转速
-	motor->torque = torque;   // 更新实际转矩电流
-	motor->temp = temp;       // 更新电机温度
+    motor->angle = angle; // 更新编码器角度
+    motor->speed = speed; // 更新转子转速
+    motor->torque = torque; // 更新实际转矩电流
+    motor->temp = temp; // 更新电机温度
 }
 
 /**
@@ -158,17 +144,17 @@ void DJIMotor_Update(DJI_Motor_t *motor, int16_t angle, int16_t speed, int16_t t
  *         各整型量再通过 uint_to_float 按对应量程还原为物理量。
  */
 void dm4310_fbdata(DM_motor_t *motor, uint8_t *rx_data)//大喵4310数据更新
-{ 
-	  motor->para.id = (rx_data[0])&0x0F;                    // 控制器 ID（数据[0]低 4 位）
-	  motor->para.state = (rx_data[0])>>4;                   // 电机状态（数据[0]高 4 位）
-	  motor->para.p_int=(rx_data[1]<<8)|rx_data[2];          // 位置整型量（16bit）
-	  motor->para.v_int=(rx_data[3]<<4)|(rx_data[4]>>4);     // 速度整型量（12bit）
-	  motor->para.t_int=((rx_data[4]&0xF)<<8)|rx_data[5];    // 扭矩整型量（12bit）
-	  motor->para.pos = uint_to_float(motor->para.p_int, P_MIN, P_MAX, 16); // 位置(rad)，量程 (-12.5,12.5)
-	  motor->para.vel = uint_to_float(motor->para.v_int, V_MIN, V_MAX, 12); // 速度(rad/s)，量程 (-30.0,30.0)
-	  motor->para.tor = uint_to_float(motor->para.t_int, T_MIN, T_MAX, 12); // 扭矩(N·m)，量程 (-10.0,10.0)
-	  motor->para.Tmos = (float)(rx_data[6]);                // MOS 管温度（℃）
-	  motor->para.Tcoil = (float)(rx_data[7]);               // 电机线圈温度（℃）
+{
+    motor->para.id = (rx_data[0])&0x0F; // 控制器 ID（数据[0]低 4 位）
+    motor->para.state = (rx_data[0])>>4; // 电机状态（数据[0]高 4 位）
+    motor->para.p_int=(rx_data[1]<<8)|rx_data[2]; // 位置整型量（16bit）
+    motor->para.v_int=(rx_data[3]<<4)|(rx_data[4]>>4); // 速度整型量（12bit）
+    motor->para.t_int=((rx_data[4]&0xF)<<8)|rx_data[5]; // 扭矩整型量（12bit）
+    motor->para.pos = uint_to_float(motor->para.p_int, P_MIN, P_MAX, 16); // 位置(rad)，量程 (-12.5,12.5) // (-12.5,12.5)
+    motor->para.vel = uint_to_float(motor->para.v_int, V_MIN, V_MAX, 12); // 速度(rad/s)，量程 (-30.0,30.0) // (-30.0,30.0)
+    motor->para.tor = uint_to_float(motor->para.t_int, T_MIN, T_MAX, 12); // 扭矩(N·m)，量程 (-10.0,10.0) // (-10.0,10.0)
+    motor->para.Tmos = (float)(rx_data[6]); // MOS 管温度（℃）
+    motor->para.Tcoil = (float)(rx_data[7]); // 电机线圈温度（℃）
 }
 
 
@@ -181,19 +167,19 @@ void dm4310_fbdata(DM_motor_t *motor, uint8_t *rx_data)//大喵4310数据更新
  */
 void enable_motor_mode(FDCAN_HandleTypeDef* hcan, uint16_t motor_id, uint16_t mode_id) //大喵电机使能
 {
-    uint8_t data[8];                    // CAN 发送数据缓冲区（8 字节）
-    uint16_t id = motor_id + mode_id;   // 实际发送的 CAN ID = 电机 ID + 模式偏移
-    
-    data[0] = 0xFF;                     // 使能指令数据帧（前 7 字节固定为 0xFF）
+    uint8_t data[8]; // CAN 发送数据缓冲区（8 字节）
+    uint16_t id = motor_id + mode_id; // 实际发送的 CAN ID = 电机 ID + 模式偏移
+
+    data[0] = 0xFF; // 使能指令数据帧（前 7 字节固定为 0xFF）
     data[1] = 0xFF;
     data[2] = 0xFF;
     data[3] = 0xFF;
     data[4] = 0xFF;
     data[5] = 0xFF;
     data[6] = 0xFF;
-    data[7] = 0xFC;                     // 0xFC：电机使能命令
-    
-    USER_CAN_Send(hcan, id, data);      // 通过 CAN 发送使能指令
+    data[7] = 0xFC; // 0xFC：电机使能命令
+
+    USER_CAN_Send(hcan, id, data); // 通过 CAN 发送使能指令
 }
 
 /**
@@ -205,19 +191,19 @@ void enable_motor_mode(FDCAN_HandleTypeDef* hcan, uint16_t motor_id, uint16_t mo
  */
 void disable_motor_mode(FDCAN_HandleTypeDef* hcan, uint16_t motor_id, uint16_t mode_id)//大喵电机失能
 {
-    uint8_t data[8];                    // CAN 发送数据缓冲区（8 字节）
-    uint16_t id = motor_id + mode_id;   // 实际发送的 CAN ID = 电机 ID + 模式偏移
-    
-    data[0] = 0xFF;                     // 失能指令数据帧（前 7 字节固定为 0xFF）
+    uint8_t data[8];
+    uint16_t id = motor_id + mode_id;
+
+    data[0] = 0xFF; // 失能指令数据帧（前 7 字节固定为 0xFF）
     data[1] = 0xFF;
     data[2] = 0xFF;
     data[3] = 0xFF;
     data[4] = 0xFF;
     data[5] = 0xFF;
     data[6] = 0xFF;
-    data[7] = 0xFD;                     // 0xFD：电机失能命令
-    
-    USER_CAN_Send(hcan, id, data);      // 通过 CAN 发送失能指令
+    data[7] = 0xFD; // 0xFD：电机失能命令
+
+    USER_CAN_Send(hcan, id, data); // 通过 CAN 发送失能指令
 }
 
 /**
@@ -235,26 +221,26 @@ void disable_motor_mode(FDCAN_HandleTypeDef* hcan, uint16_t motor_id, uint16_t m
  */
 void mit_ctrl(FDCAN_HandleTypeDef *hcan, uint16_t motor_id, float pos, float vel,float kp, float kd, float torq)//mit模式 控制大喵电机
 {
-    uint8_t data[8];                                    // CAN 发送数据缓冲区（8 字节）
-    uint16_t pos_tmp,vel_tmp,kp_tmp,kd_tmp,tor_tmp;     // 各物理量编码后的整型临时变量
-    uint16_t id = motor_id + MIT_MODE;                  // MIT 模式实际发送的 CAN ID
+    uint8_t data[8];
+    uint16_t pos_tmp,vel_tmp,kp_tmp,kd_tmp,tor_tmp; // 各物理量编码后的整型临时变量
+    uint16_t id = motor_id + MIT_MODE; // MIT 模式实际发送的 CAN ID
 
-    pos_tmp = float_to_uint(pos,  P_MIN,  P_MAX,  16);  // 目标位置 -> 16bit 整型
-    vel_tmp = float_to_uint(vel,  V_MIN,  V_MAX,  12);  // 目标速度 -> 12bit 整型
-    kp_tmp  = float_to_uint(kp,   KP_MIN, KP_MAX, 12);  // 位置增益 Kp -> 12bit 整型
-    kd_tmp  = float_to_uint(kd,   KD_MIN, KD_MAX, 12);  // 速度增益 Kd -> 12bit 整型
-    tor_tmp = float_to_uint(torq, T_MIN,  T_MAX,  12);  // 前馈力矩 -> 12bit 整型
+    pos_tmp = float_to_uint(pos,  P_MIN,  P_MAX,  16); // 目标位置 -> 16bit 整型
+    vel_tmp = float_to_uint(vel,  V_MIN,  V_MAX,  12); // 目标速度 -> 12bit 整型
+    kp_tmp  = float_to_uint(kp,   KP_MIN, KP_MAX, 12); // 位置增益 Kp -> 12bit 整型
+    kd_tmp  = float_to_uint(kd,   KD_MIN, KD_MAX, 12); // 速度增益 Kd -> 12bit 整型
+    tor_tmp = float_to_uint(torq, T_MIN,  T_MAX,  12); // 前馈力矩 -> 12bit 整型
 
-    data[0] = (pos_tmp >> 8);                           // 位置：高 8 位
-    data[1] = pos_tmp;                                  // 位置：低 8 位
-    data[2] = (vel_tmp >> 4);                           // 速度：高 8 位
-    data[3] = ((vel_tmp&0xF)<<4)|(kp_tmp>>8);           // 速度低 4 位 + Kp 高 4 位
-    data[4] = kp_tmp;                                   // Kp：低 8 位
-    data[5] = (kd_tmp >> 4);                            // Kd：高 8 位
-    data[6] = ((kd_tmp&0xF)<<4)|(tor_tmp>>8);           // Kd 低 4 位 + 力矩高 4 位
-    data[7] = tor_tmp;                                  // 力矩：低 8 位
-    
-    USER_CAN_Send(hcan, id, data);                      // 通过 CAN 发送 MIT 控制指令
+    data[0] = (pos_tmp >> 8); // 位置：高 8 位
+    data[1] = pos_tmp; // 位置：低 8 位
+    data[2] = (vel_tmp >> 4); // 速度：高 8 位
+    data[3] = ((vel_tmp&0xF)<<4)|(kp_tmp>>8); // 速度低 4 位 + Kp 高 4 位
+    data[4] = kp_tmp; // Kp：低 8 位
+    data[5] = (kd_tmp >> 4); // Kd：高 8 位
+    data[6] = ((kd_tmp&0xF)<<4)|(tor_tmp>>8); // Kd 低 4 位 + 力矩高 4 位
+    data[7] = tor_tmp; // 力矩：低 8 位
+
+    USER_CAN_Send(hcan, id, data); // 通过 CAN 发送 MIT 控制指令
 }
 
 /**
@@ -266,22 +252,23 @@ void mit_ctrl(FDCAN_HandleTypeDef *hcan, uint16_t motor_id, float pos, float vel
  */
 void clear_err(FDCAN_HandleTypeDef* hfdcan, uint16_t motor_id, uint16_t mode_id)
 {
-		uint8_t data[8];                    // CAN 发送数据缓冲区（8 字节）
-		uint16_t id = motor_id + mode_id;   // 实际发送的 CAN ID = 电机 ID + 模式偏移
-		
-		data[0] = 0xFF;                     // 清错指令数据帧（前 7 字节固定为 0xFF）
-		data[1] = 0xFF;
-		data[2] = 0xFF;
-		data[3] = 0xFF;
-		data[4] = 0xFF;
-		data[5] = 0xFF;
-		data[6] = 0xFF;
-		data[7] = 0xFB;                     // 0xFB：清除电机错误命令
-		
-		USER_CAN_Send(hfdcan, id, data);    // 通过 CAN 发送清错指令
+    uint8_t data[8];
+    uint16_t id = motor_id + mode_id;
+
+    data[0] = 0xFF; // 清错指令数据帧（前 7 字节固定为 0xFF）
+    data[1] = 0xFF;
+    data[2] = 0xFF;
+    data[3] = 0xFF;
+    data[4] = 0xFF;
+    data[5] = 0xFF;
+    data[6] = 0xFF;
+    data[7] = 0xFB; // 0xFB：清除电机错误命令
+
+    USER_CAN_Send(hfdcan, id, data); // 通过 CAN 发送清错指令
 }
 
 
+//发送电机电流信息 控制DJI电机
 /**
  * @brief  发送大疆电机电流（转矩电流）控制指令
  * @param  hfdcan FDCAN 句柄指针
@@ -292,20 +279,19 @@ void clear_err(FDCAN_HandleTypeDef* hfdcan, uint16_t motor_id, uint16_t mode_id)
  * @param  iq4    第 4 个电机的转矩电流
  * @note   一帧 8 字节可同时控制 4 个电机：每 2 字节存一个大端序 int16 电流值。
  */
-//发送电机电流信息 控制DJI电机
 void USER_CAN_SetMotorCurrent(FDCAN_HandleTypeDef* hfdcan,int16_t StdId,int16_t iq1, int16_t iq2, int16_t iq3, int16_t iq4)
 {
-		uint8_t tx_data[8]={0};                     // CAN 发送数据缓冲区（8 字节），初值全 0
-		tx_data[0] = (iq1 >> 8) & 0xff;             // 电机 1 电流：高字节
-		tx_data[1] = (iq1) & 0xff;                  // 电机 1 电流：低字节
-		tx_data[2] = (iq2 >> 8) & 0xff;             // 电机 2 电流：高字节
-		tx_data[3] = (iq2) & 0xff;                  // 电机 2 电流：低字节
-		tx_data[4] = (iq3 >> 8) & 0xff;             // 电机 3 电流：高字节
-		tx_data[5] = (iq3) & 0xff;                  // 电机 3 电流：低字节
-		tx_data[6] = (iq4 >> 8) & 0xff;             // 电机 4 电流：高字节
-		tx_data[7] = (iq4) & 0xff;                  // 电机 4 电流：低字节	
-		
-		USER_CAN_Send(hfdcan,StdId, tx_data);       // 通过 CAN 发送四路电流控制指令
+    uint8_t tx_data[8]={0}; // CAN 发送数据缓冲区（8 字节），初值全 0
+    tx_data[0] = (iq1 >> 8) & 0xff; // 电机 1 电流：高字节
+    tx_data[1] = (iq1) & 0xff; // 电机 1 电流：低字节
+    tx_data[2] = (iq2 >> 8) & 0xff; // 电机 2 电流：高字节
+    tx_data[3] = (iq2) & 0xff; // 电机 2 电流：低字节
+    tx_data[4] = (iq3 >> 8) & 0xff; // 电机 3 电流：高字节
+    tx_data[5] = (iq3) & 0xff; // 电机 3 电流：低字节
+    tx_data[6] = (iq4 >> 8) & 0xff; // 电机 4 电流：高字节
+    tx_data[7] = (iq4) & 0xff; // 电机 4 电流：低字节
+
+    USER_CAN_Send(hfdcan,StdId, tx_data); // 通过 CAN 发送四路电流控制指令
 }
 
 
