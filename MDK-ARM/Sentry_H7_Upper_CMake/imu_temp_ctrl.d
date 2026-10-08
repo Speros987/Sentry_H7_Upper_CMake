@@ -57,6 +57,4 @@ sentry_h7_upper_cmake/imu_temp_ctrl.o: ..\IMU\src\imu_temp_ctrl.c \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\utils.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\fast_math_functions.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\basic_math_functions.h \
-  ..\IMU\Algorithm\inc\QuaternionEKF.h ..\IMU\inc\imu_temp_ctrl.h \
-  ..\IMU\Mahony\inc\MahonyAHRS.h ..\IMU\Algorithm\inc\controller.h \
-  ..\IMU\Algorithm\inc\user_lib.h
+  ..\IMU\Algorithm\inc\QuaternionEKF.h ..\IMU\inc\imu_temp_ctrl.h

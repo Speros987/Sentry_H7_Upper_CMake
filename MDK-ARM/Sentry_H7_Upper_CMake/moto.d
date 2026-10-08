@@ -49,7 +49,6 @@ sentry_h7_upper_cmake/moto.o: ..\Application\src\Moto.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\UserMiddlewares\inc\USER_Moto.h ..\math\inc\SMC.h \
-  ..\Application\inc\shooter.h ..\math\inc\Slope.h \
-  ..\Application\inc\gimbal.h ..\math\inc\Filter.h \
-  ..\Application\inc\judge.h
+  ..\UserMiddlewares\inc\USER_Moto.h ..\Application\inc\Shooter.h \
+  ..\Application\inc\Gimbal.h ..\math\inc\slope.h \
+  ..\Application\inc\Judge.h

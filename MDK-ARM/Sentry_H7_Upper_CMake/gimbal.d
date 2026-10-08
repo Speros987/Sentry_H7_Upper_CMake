@@ -49,11 +49,10 @@ sentry_h7_upper_cmake/gimbal.o: ..\Application\src\Gimbal.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\math\inc\PID.h ..\math\inc\SMC.h ..\math\inc\slope.h \
-  ..\math\inc\Filter.h ..\IMU\inc\imu_temp_ctrl.h \
+  ..\math\inc\PID.h ..\math\inc\slope.h ..\IMU\inc\imu_temp_ctrl.h \
   ..\UserMiddlewares\inc\USER_RC.h ..\Core\Inc\usart.h \
-  ..\Application\inc\vision.h ..\Application\inc\chassis.h \
-  ..\Application\inc\shooter.h ..\Application\inc\Moto.h \
+  ..\Application\inc\Vision.h ..\Application\inc\Chassis.h \
+  ..\Application\inc\Shooter.h ..\Application\inc\Moto.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math_types.h \
   ..\Drivers\CMSIS\Include\cmsis_compiler.h \
@@ -75,4 +74,5 @@ sentry_h7_upper_cmake/gimbal.o: ..\Application\src\Gimbal.c \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\transform_functions.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\filtering_functions.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\quaternion_math_functions.h \
-  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\window_functions.h
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\window_functions.h \
+  ..\math\inc\degree.h

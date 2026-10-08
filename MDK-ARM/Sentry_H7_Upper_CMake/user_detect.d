@@ -50,4 +50,4 @@ sentry_h7_upper_cmake/user_detect.o: ..\UserMiddlewares\src\USER_Detect.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
   ..\Application\inc\UserFreertos.h ..\Application\inc\Beep.h \
-  ..\Application\inc\judge.h ..\UserMiddlewares\inc\USER_B2B.h
+  ..\Application\inc\Judge.h ..\UserMiddlewares\inc\USER_B2B.h

@@ -50,4 +50,4 @@ sentry_h7_upper_cmake/user_rc.o: ..\UserMiddlewares\src\USER_RC.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
   ..\Application\inc\UserFreertos.h ..\UserMiddlewares\inc\USER_Moto.h \
   ..\BSP\inc\bsp_can.h ..\Core\Inc\fdcan.h ..\math\inc\PID.h \
-  ..\math\inc\SMC.h ..\UserMiddlewares\inc\USER_B2B.h
+  ..\UserMiddlewares\inc\USER_B2B.h

@@ -1,0 +1,11 @@
+# ninja log v7
+20	62	8131387815106163	D:/robomaster/Sentry Robot/Sentry_H7_Upper_CMake/.codex-build/CMakeFiles/cmake.verify_globs	d27e9705b513b760
+71	376	8131387815612032	CMakeFiles/Sentry_H7_Upper_CMake.dir/USB_DEVICE/App/usb_device.c.obj	e4935a2bea302756
+64	405	8131387815542036	CMakeFiles/Sentry_H7_Upper_CMake.dir/USB_DEVICE/Target/usbd_conf.c.obj	bb68e50009c907fc
+83	444	8131387815732024	CMakeFiles/Sentry_H7_Upper_CMake.dir/USB_DEVICE/App/usbd_cdc_if.c.obj	4bb5f630f709f7bf
+77	452	8131387815672029	CMakeFiles/Sentry_H7_Upper_CMake.dir/USB_DEVICE/App/usbd_desc.c.obj	ac8b361838e05523
+405	590	8131387818957124	CMakeFiles/Sentry_H7_Upper_CMake.dir/Core/Src/gpio.c.obj	700247744d03de47
+453	653	8131387819422405	CMakeFiles/Sentry_H7_Upper_CMake.dir/Core/Src/dma.c.obj	2dc67eb837604961
+444	676	8131387819342415	CMakeFiles/Sentry_H7_Upper_CMake.dir/Core/Src/freertos.c.obj	f66ef1d0e5ed9ed6
+590	825	8131387820809270	CMakeFiles/Sentry_H7_Upper_CMake.dir/Core/Src/fdcan.c.obj	d480f449005994d2
+653	848	8131387821427842	CMakeFiles/Sentry_H7_Upper_CMake.dir/Core/Src/spi.c.obj	9e9dcbc4b68663bb

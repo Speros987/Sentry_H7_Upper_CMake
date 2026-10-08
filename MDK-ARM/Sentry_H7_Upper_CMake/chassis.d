@@ -51,8 +51,7 @@ sentry_h7_upper_cmake/chassis.o: ..\Application\src\Chassis.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\math\inc\SMC.h ..\UserMiddlewares\inc\USER_RC.h ..\Core\Inc\usart.h \
-  ..\IMU\Algorithm\inc\user_lib.h \
+  ..\UserMiddlewares\inc\USER_RC.h ..\Core\Inc\usart.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math_types.h \
   ..\Drivers\CMSIS\Include\cmsis_compiler.h \
@@ -75,5 +74,5 @@ sentry_h7_upper_cmake/chassis.o: ..\Application\src\Chassis.c \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\filtering_functions.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\quaternion_math_functions.h \
   D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\window_functions.h \
-  ..\Application\inc\Gimbal.h ..\math\inc\Filter.h \
-  ..\Application\inc\vision.h
+  ..\Application\inc\Gimbal.h ..\Application\inc\Vision.h \
+  ..\math\inc\degree.h

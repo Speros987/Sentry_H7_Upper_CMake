@@ -44,7 +44,7 @@ void Chassis_Init()
     chassis.rotate.InitAngle = INIT_YAW_ANGLE; // 云台与底盘机械对齐时yaw电机的编码器角度(°)，作为相对角解算基准
     chassis.rotate.InitpitchAngle = 1290; // 云台水平时pitch电机的编码器值
 
-	chassis.motors[0].TurnOffset= -304.57  +30 + 180; //
+	chassis.motors[0].TurnOffset= -304.57  +0 + 180; //
 	chassis.motors[1].TurnOffset= -44.78 + 30 + 45 + 180; //       // 右前舵轮转向电机零偏(°) //
 	chassis.motors[2].TurnOffset= -119.49 + 30 + 90 + 15 + 180; //  //此处校准舵电机 正常加减30°的倍数   // 左后舵轮转向电机零偏(°) //  //此处校准舵电机 正常加减30°的倍数
 	chassis.motors[3].TurnOffset= -6.5 + 90 - 15 + 180; //         // 右后舵轮转向电机零偏(°) //

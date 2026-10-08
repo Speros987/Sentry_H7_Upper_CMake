@@ -54,4 +54,4 @@ sentry_h7_upper_cmake/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\BSP\inc\bsp_can.h ..\Application\inc\beep.h \
   ..\UserMiddlewares\inc\USER_B2B.h ..\UserMiddlewares\inc\USER_Detcet.h \
   ..\BSP\inc\bsp_dwt.h ..\Application\inc\Judge.h \
-  ..\UserMiddlewares\inc\USER_RC.h ..\Application\inc\vision.h
+  ..\UserMiddlewares\inc\USER_RC.h

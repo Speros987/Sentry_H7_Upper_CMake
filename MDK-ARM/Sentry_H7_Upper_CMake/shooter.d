@@ -1,6 +1,6 @@
 sentry_h7_upper_cmake/shooter.o: ..\Application\src\Shooter.c \
   ..\Application\inc\Shooter.h ..\Application\inc\Moto.h \
-  ..\math\inc\Slope.h ..\Core\Inc\main.h \
+  ..\UserMiddlewares\inc\USER_Moto.h ..\Core\Inc\main.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h \
   ..\Core\Inc\stm32h7xx_hal_conf.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rcc.h \
@@ -35,8 +35,7 @@ sentry_h7_upper_cmake/shooter.o: ..\Application\src\Shooter.c \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_usb.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h \
-  ..\UserMiddlewares\inc\USER_Moto.h ..\BSP\inc\bsp_can.h \
-  ..\Core\Inc\fdcan.h \
+  ..\BSP\inc\bsp_can.h ..\Core\Inc\fdcan.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
   ..\Core\Inc\FreeRTOSConfig.h \
@@ -51,8 +50,7 @@ sentry_h7_upper_cmake/shooter.o: ..\Application\src\Shooter.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\math\inc\PID.h ..\math\inc\SMC.h ..\Application\inc\chassis.h \
+  ..\math\inc\PID.h ..\Application\inc\Chassis.h ..\math\inc\Slope.h \
   ..\UserMiddlewares\inc\USER_RC.h ..\Core\Inc\usart.h \
-  ..\Application\inc\beep.h ..\Application\inc\vision.h \
-  ..\Application\inc\gimbal.h ..\math\inc\Filter.h \
-  ..\Application\inc\judge.h
+  ..\Application\inc\Beep.h ..\Application\inc\Vision.h \
+  ..\Application\inc\Gimbal.h ..\Application\inc\Judge.h

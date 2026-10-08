@@ -1,5 +1,5 @@
 sentry_h7_upper_cmake/vision.o: ..\Application\src\Vision.c \
-  ..\Application\inc\vision.h ..\Core\Inc\main.h \
+  ..\Application\inc\Vision.h ..\Core\Inc\main.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h \
   ..\Core\Inc\stm32h7xx_hal_conf.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rcc.h \
@@ -35,8 +35,8 @@ sentry_h7_upper_cmake/vision.o: ..\Application\src\Vision.c \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_usb.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h \
   ..\Application\inc\Shooter.h ..\Application\inc\Moto.h \
-  ..\math\inc\Slope.h ..\UserMiddlewares\inc\USER_Moto.h \
-  ..\BSP\inc\bsp_can.h ..\Core\Inc\fdcan.h \
+  ..\UserMiddlewares\inc\USER_Moto.h ..\BSP\inc\bsp_can.h \
+  ..\Core\Inc\fdcan.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
   ..\Core\Inc\FreeRTOSConfig.h \
@@ -51,13 +51,36 @@ sentry_h7_upper_cmake/vision.o: ..\Application\src\Vision.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\math\inc\PID.h ..\math\inc\SMC.h ..\USB_DEVICE\App\usbd_cdc_if.h \
+  ..\math\inc\PID.h ..\USB_DEVICE\App\usbd_cdc_if.h \
   ..\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc\usbd_cdc.h \
   ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h \
   ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_def.h \
   ..\USB_DEVICE\Target\usbd_conf.h \
   ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h \
   ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h \
-  ..\Application\inc\chassis.h ..\Application\inc\gimbal.h \
-  ..\math\inc\Filter.h ..\IMU\inc\imu_temp_ctrl.h \
-  ..\Application\inc\Judge.h ..\UserMiddlewares\inc\USER_B2B.h
+  ..\Application\inc\Chassis.h ..\math\inc\Slope.h \
+  ..\Application\inc\Gimbal.h ..\IMU\inc\imu_temp_ctrl.h \
+  ..\Application\inc\Judge.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math_types.h \
+  ..\Drivers\CMSIS\Include\cmsis_compiler.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\arm_math_memory.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\none.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\utils.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\basic_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\interpolation_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\bayes_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\statistics_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\fast_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\matrix_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\complex_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\controller_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\support_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\distance_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\svm_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\svm_defines.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\transform_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\filtering_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\quaternion_math_functions.h \
+  D:\Keil\Pack\ARM\CMSIS-DSP\1.16.2\Include\dsp\window_functions.h \
+  ..\UserMiddlewares\inc\USER_B2B.h

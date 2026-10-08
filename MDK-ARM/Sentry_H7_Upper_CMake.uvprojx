@@ -769,26 +769,11 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\src\bsp_ws2812.c</FilePath>
             </File>
-            <File>
-              <FileName>super_cap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\BSP\src\super_cap.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>IMU</GroupName>
           <Files>
-            <File>
-              <FileName>algorithm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\IMU\Algorithm\src\algorithm.c</FilePath>
-            </File>
-            <File>
-              <FileName>controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\IMU\Algorithm\src\controller.c</FilePath>
-            </File>
             <File>
               <FileName>kalman_filter.c</FileName>
               <FileType>1</FileType>
@@ -810,19 +795,9 @@
               <FilePath>..\IMU\BMI088\BMI088Middleware.c</FilePath>
             </File>
             <File>
-              <FileName>MahonyAHRS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\IMU\Mahony\src\MahonyAHRS.c</FilePath>
-            </File>
-            <File>
               <FileName>imu_temp_ctrl.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\IMU\src\imu_temp_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>user_lib.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\IMU\Algorithm\src\user_lib.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -830,14 +805,19 @@
           <GroupName>math</GroupName>
           <Files>
             <File>
+              <FileName>degree.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\math\src\degree.c</FilePath>
+            </File>
+            <File>
               <FileName>Crc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\math\src\Crc.c</FilePath>
             </File>
             <File>
-              <FileName>Filter.c</FileName>
+              <FileName>dji_angle.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\math\src\Filter.c</FilePath>
+              <FilePath>..\math\src\dji_angle.c</FilePath>
             </File>
             <File>
               <FileName>myQueue.c</FileName>
@@ -853,11 +833,6 @@
               <FileName>Slope.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\math\src\Slope.c</FilePath>
-            </File>
-            <File>
-              <FileName>SMC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\math\src\SMC.c</FilePath>
             </File>
           </Files>
         </Group>

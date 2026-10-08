@@ -49,4 +49,4 @@ sentry_h7_upper_cmake/user_moto.o: ..\UserMiddlewares\src\USER_Moto.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\math\inc\PID.h ..\math\inc\SMC.h
+  ..\math\inc\PID.h ..\math\inc\degree.h ..\math\inc\dji_angle.h

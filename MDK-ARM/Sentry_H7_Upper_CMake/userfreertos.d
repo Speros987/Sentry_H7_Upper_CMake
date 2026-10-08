@@ -50,6 +50,5 @@ sentry_h7_upper_cmake/userfreertos.o: ..\Application\src\UserFreertos.c \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_usb.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h \
   ..\BSP\inc\bsp_can.h ..\Core\Inc\fdcan.h ..\math\inc\PID.h \
-  ..\math\inc\SMC.h ..\UserMiddlewares\inc\USER_B2B.h \
-  ..\UserMiddlewares\inc\USER_RC.h ..\Core\Inc\usart.h \
-  ..\BSP\inc\bsp_ws2812.h ..\Core\Inc\tim.h
+  ..\UserMiddlewares\inc\USER_B2B.h ..\UserMiddlewares\inc\USER_RC.h \
+  ..\Core\Inc\usart.h ..\BSP\inc\bsp_ws2812.h ..\Core\Inc\tim.h
